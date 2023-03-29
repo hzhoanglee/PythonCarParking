@@ -1,5 +1,5 @@
 class Settings:
-    def __init__(self, X_VALUE=1, Y_VALUE=1, Z_VALUE=1, name="VitQuayParking", password=1234):
+    def __init__(self, X_VALUE, Y_VALUE, Z_VALUE, name, password):
         self.__X_VALUE = X_VALUE
         self.__Y_VALUE = Y_VALUE
         self.__Z_VALUE = Z_VALUE
