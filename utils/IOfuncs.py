@@ -53,6 +53,7 @@ class IOfuncs:
             if slot.is_available():
                 slot.check_in(car)
                 update_check_ins_db(slot.get_slot_id(), driver_name, license_plate)
+                break
 
     #remove a car(checking out)
     def checkout_car(self, slot_id):
