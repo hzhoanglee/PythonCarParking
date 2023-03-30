@@ -41,11 +41,12 @@ def update_check_ins(slot_id, driver_name, license_plate):
     mydb.commit()
 
 def check_out(slot_id):
-    dbconnection.execute("SELECT checkin_time FROM check_ins WHERE slot_code = %s", (slot_id,))
-    checkin_time = dbconnection.fetchone()
+    #dbconnection.execute("SELECT checkin_time FROM check_ins WHERE slot_code = %s", (slot_id,))
+    dbconnection.execute("SELECT TIMEDIFF(NOW(), checkin_time) AS timediff FROM check_ins WHERE slot_code = %s", (slot_id,))
+    timediff = dbconnection.fetchone()
     dbconnection.execute("DELETE FROM check_ins WHERE slot_code = %s", (slot_id,))
     mydb.commit()
-    return checkin_time
+    return timediff
 
 
 

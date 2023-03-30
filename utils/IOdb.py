@@ -20,12 +20,9 @@ def update_check_ins_db(slot_id, driver_name, license_plate):
     utils.connect.update_check_ins(slot_id, driver_name, license_plate)
 
 def check_out_db(slot_id):
-    #now time
-    now = datetime.now()
-    result = utils.connect.check_out(slot_id)
-    checkin_time = result['checkin_time']
-    #calculate time difference(hours)
-    datetime_diff = now - checkin_time
-    #convert to hours(int)
-    datetime_diff = int(datetime_diff.total_seconds() / 3600)
+    #get the time diff from the db sql
+    timediff = utils.connect.check_out(slot_id)
+    #convert the time diff to hours(int)
+    datetime_diff = timediff["timediff"]
+    datetime_diff = datetime_diff.total_seconds() / 3600
     return datetime_diff
