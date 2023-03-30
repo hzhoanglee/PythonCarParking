@@ -1,11 +1,11 @@
 from utils.IOfuncs import IOfuncs
-
+from utils.Analyz import Analyz
 class ManagementSystem:
     def __init__(self):
         #self.settings = fetch_settings()
         self.parking_slots = []
         self.io_car = IOfuncs(self.parking_slots)
-
+        self.analyz = Analyz()
     def setup_parking_lot(self):
         self.io_car.setup_parking_lot()
 
@@ -37,4 +37,7 @@ class ManagementSystem:
     def get_settings(self):
         for i in self.io_car.get_settings():
             print(i)
+
+    def get_used_slot(self):
+        self.analyz.get_used_slot()
 

@@ -13,3 +13,4 @@ if __name__ == "__main__":
     #ms.checkin("Jack", "346")
     #ms.checkout("A0-F2")
     ms.get_slot_list()
+    ms.get_used_slot()
