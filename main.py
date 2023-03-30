@@ -11,5 +11,5 @@ if __name__ == "__main__":
     #ms.checkin("Jane", "456")
     #ms.checkin("Jack", "789")
     #ms.checkin("Jack", "346")
-    ms.checkout("A0-F2")
+    #ms.checkout("A0-F2")
     ms.get_slot_list()

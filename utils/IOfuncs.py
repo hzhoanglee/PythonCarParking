@@ -36,13 +36,13 @@ class IOfuncs:
             for j in y_list:
                 for k in z_list:
                     #format of slot id: A1-F0
-                    gen_slot_id = str(i[0] + str(j) + "-" + k)
-                    self.slot_list.append(Slot(gen_slot_id))
+                    gen_slot_code = f"{i[0]}{j}-{k}"
+                    self.slot_list.append(Slot(gen_slot_code))
         online_slots = fetch_check_ins_db()
 
         for slot in self.slot_list:
             for online_slot in online_slots:
-                if slot.get_slot_id() == online_slot['slot_code']:
+                if slot.get_slot_code() == online_slot['slot_code']:
                     slot.check_in(Car(online_slot['car_driver_name'], online_slot['car_license_plate']))
 
 
@@ -52,15 +52,15 @@ class IOfuncs:
         for slot in self.slot_list:
             if slot.is_available():
                 slot.check_in(car)
-                update_check_ins_db(slot.get_slot_id(), driver_name, license_plate)
+                update_check_ins_db(slot.get_slot_code(), driver_name, license_plate)
                 break
 
     #remove a car(checking out)
-    def checkout_car(self, slot_id):
+    def checkout_car(self, slot_code):
         for slot in self.slot_list:
-            if slot.get_slot_id() == slot_id:
+            if slot.get_slot_code() == slot_code:
                 slot.check_out()
-                datetime_diff = check_out_db(slot_id)
+                datetime_diff = check_out_db(slot_code)
                 return datetime_diff
 
     #edit settings

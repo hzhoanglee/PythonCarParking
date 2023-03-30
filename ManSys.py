@@ -12,8 +12,8 @@ class ManagementSystem:
     def checkin(self, driver_name, license_plate):
         self.io_car.checkin_car(driver_name, license_plate)
 
-    def checkout(self, slot_id):
-        time_diff = self.io_car.checkout_car(slot_id)
+    def checkout(self, slot_code):
+        time_diff = self.io_car.checkout_car(slot_code)
         print("Time diff: ", time_diff)
 
         if time_diff < 7:
@@ -32,7 +32,7 @@ class ManagementSystem:
     def get_slot_list(self):
         for i in self.io_car.get_slot_list():
             if not i.is_available():
-                print(i.get_slot_id(), i.get_car().get_driver_name(), i.get_car().get_license_plate())
+                print(i.get_slot_code(), i.get_car().get_driver_name(), i.get_car().get_license_plate())
 
     def get_settings(self):
         for i in self.io_car.get_settings():

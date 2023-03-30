@@ -1,6 +1,6 @@
 class Slot:
-    def __init__(self, slot_id):
-        self.slot_id = slot_id
+    def __init__(self, slot_code):
+        self.slot_code = slot_code
         self.car = None
 
     def is_available(self):
@@ -15,5 +15,5 @@ class Slot:
     def get_car(self):
         return self.car
 
-    def get_slot_id(self):
-        return self.slot_id
+    def get_slot_code(self):
+        return self.slot_code
