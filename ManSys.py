@@ -1,4 +1,5 @@
 from utils.IOfuncs import IOfuncs
+import bcrypt
 class ManagementSystem:
     def __init__(self):
         #self.settings = fetch_settings()

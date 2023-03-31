@@ -1,8 +1,8 @@
-import parking
 from parking.car import Car
 from parking.slot import Slot
 from parking.setting import Settings
 from utils.IOdb import *
+import bcrypt
 
 class IOfuncs:
     def __init__(self, slot_list):
@@ -13,7 +13,6 @@ class IOfuncs:
                                  settings_fetch[3]['conf_value'],
                                  settings_fetch[4]['conf_value'])
         self.slot_list = slot_list
-
     #==================================================================================================================
     #Input
 

@@ -1,8 +1,17 @@
+from login_verification import LoginVerification
 from ManSys import ManagementSystem
 
 if __name__ == "__main__":
     #settings = utils.connect.get_settings()
     #print(settings)
+
+    lv = LoginVerification()
+    result = lv.verify_password("admin")
+
+    if result:
+        print("Login success")
+    else:
+        print("Login failed")
 
     ms = ManagementSystem()
     ms.setup_parking_lot()
