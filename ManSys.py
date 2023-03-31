@@ -1,16 +1,16 @@
 from utils.IOfuncs import IOfuncs
-from utils.Analyz import Analyz
 class ManagementSystem:
     def __init__(self):
         #self.settings = fetch_settings()
         self.parking_slots = []
         self.io_car = IOfuncs(self.parking_slots)
-        self.analyz = Analyz()
+
+    #==================================================================================================================
     def setup_parking_lot(self):
         self.io_car.setup_parking_lot()
 
-    def checkin(self, driver_name, license_plate):
-        self.io_car.checkin_car(driver_name, license_plate)
+    def checkin(self, driver_name, license_plate, slot_code):
+        self.io_car.checkin_car(driver_name, license_plate, slot_code)
 
     def checkout(self, slot_code):
         time_diff = self.io_car.checkout_car(slot_code)
@@ -29,6 +29,7 @@ class ManagementSystem:
     def edit_settings(self, X_VALUE, Y_VALUE, Z_VALUE, name, password):
         return self.io_car.edit_settings(X_VALUE, Y_VALUE, Z_VALUE, name, password)
 
+    #==================================================================================================================
     def get_slot_list(self):
         for i in self.io_car.get_slot_list():
             if not i.is_available():
@@ -38,6 +39,20 @@ class ManagementSystem:
         for i in self.io_car.get_settings():
             print(i)
 
-    def get_used_slot(self):
-        self.analyz.get_used_slot()
+    def get_unused_slots(self):
+        for i in self.io_car.get_unused_slot():
+            print(i.get_slot_code())
+
+
+    def get_used_slots(self):
+        self.io_car.get_used_slot()
+
+    def get_used_slot_count(self):
+        self.io_car.get_used_slot_count()
+
+    def get_available_slot_count(self):
+        self.io_car.get_available_slot_count()
+
+    #def get_used_slot(self):
+    #    self.get_used_slot()
 

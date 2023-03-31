@@ -38,8 +38,8 @@ class IOfuncs:
                     #format of slot id: A1-F0
                     gen_slot_code = f"{i[0]}{j}-{k}"
                     self.slot_list.append(Slot(gen_slot_code))
-        online_slots = fetch_check_ins_db()
 
+        online_slots = fetch_check_ins_db()
         for slot in self.slot_list:
             for online_slot in online_slots:
                 if slot.get_slot_code() == online_slot['slot_code']:
@@ -47,13 +47,20 @@ class IOfuncs:
 
 
     #parking a car(checking in)
-    def checkin_car(self, driver_name, license_plate):
+    def checkin_car(self, driver_name, license_plate, slot_code = None):
         car = Car(driver_name, license_plate)
-        for slot in self.slot_list:
-            if slot.is_available():
-                slot.check_in(car)
-                update_check_ins_db(slot.get_slot_code(), driver_name, license_plate)
-                break
+        if slot_code is None:
+            for slot in self.slot_list:
+                if slot.is_available():
+                    slot.check_in(car)
+                    update_check_ins_db(slot.get_slot_code(), driver_name, license_plate)
+                    break
+        else:
+            for slot in self.slot_list:
+                if slot.get_slot_code() == slot_code and slot.is_available():
+                    slot.check_in(car)
+                    update_check_ins_db(slot.get_slot_code(), driver_name, license_plate)
+                    break
 
     #remove a car(checking out)
     def checkout_car(self, slot_code):
@@ -82,3 +89,28 @@ class IOfuncs:
     #get the list of settings
     def get_settings(self):
         return self.settings
+
+    def get_used_slot(self):
+        used_slots = fetch_used_slots_db()
+        return used_slots
+
+    def get_unused_slot(self):
+        available_slots = []
+        for slot in self.slot_list:
+            if slot.is_available():
+                available_slots.append(slot)
+        return available_slots
+
+    #get the count of used slots
+    def get_used_slot_count(self):
+        count = fetch_used_slot_count_db()
+        print("Used slot count: ", count)
+        return count
+
+    #get the count of available slots
+    def get_available_slot_count(self):
+        max_slots_count = int(self.settings.get_X_VALUE()) * int(self.settings.get_Y_VALUE()) * int(self.settings.get_Z_VALUE())
+        used_slots_count = fetch_unused_slot_count_db(max_slots_count)
+        print("Available slot count: ", used_slots_count)
+        return used_slots_count
+
