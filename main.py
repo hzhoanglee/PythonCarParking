@@ -26,6 +26,9 @@ if __name__ == "__main__":
     ms.get_unused_slots()
     print("=====================================")
     ms.get_used_slots()
+    history = ms.get_history()
+    for i in history:
+        print(i)
 
     #gui = Dashboard()
     

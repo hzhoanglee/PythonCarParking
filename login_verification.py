@@ -4,7 +4,6 @@ import bcrypt
 class LoginVerification:
     def __init__(self):
         self.settings = IOdb.fetch_settings_db()
-        self.name = self.settings[0]["name"]
         self.password = self.settings[0]["password"]
         self.__hashed_password = self.hash_password_db()
 
