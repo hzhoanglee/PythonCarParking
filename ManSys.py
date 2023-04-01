@@ -57,9 +57,10 @@ class ManagementSystem:
         return available_slot_count
 
 
-    def search_info(self, driver_name, license_plate, slot_code):
-        if slot_code is not None:
-            return self.io_car.search_slot_by_code(slot_code)
+    def get_slot_by_code(self, slot_code):
+        for slot in self.parking_slots:
+            if slot.get_slot_code() == slot_code:
+                return slot
     def get_history(self):
         return self.io_car.get_history()
     #def get_used_slot(self):
