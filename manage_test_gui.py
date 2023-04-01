@@ -109,7 +109,7 @@ def open_history():
     # Creating the screen
     new = ttk.CTkToplevel(root)
     new.resizable(False, False)
-    new.title("Manage Car Window")
+    new.title("History")
     new.config(background=mainScreenColor)
     x = root.winfo_x()
     y = root.winfo_y()
@@ -276,41 +276,8 @@ l1.place(x=50, y=480)
 # ======================================================
 
 
-# Car check in frame
 
 
-frame2 = ttk.CTkFrame(master=root,
-                      width=700,
-                      height=470,
-                      fg_color=frameColor)
-
-frame2Label = ttk.CTkLabel(master=frame2,
-                           text="Car Check In",
-                           font=("", 20, 'bold'))
-
-# def open_frame_1():
-#     hide_frames()
-#     frame1.place(x=250, y=90)
-#     frame1Label.place(x=250,
-#                       y=80)
-#
-#
-# def open_frame_2():
-#     hide_frames()
-#     frame2.place(x=201, y=0)
-#     label = ttk.CTkLabel(frame2, text="this is frame 2").pack()
-#
-#
-# def hide_frames():
-#     for widget in frame1.winfo_children():
-#         widget.destroy()
-#
-#     for widget in frame2.winfo_children():
-#         widget.destroy()
-#
-#     frame1.place_forget()
-#     frame2.place_forget()
-#
 
 my_time()
 root.mainloop()
