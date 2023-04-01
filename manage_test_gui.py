@@ -3,6 +3,8 @@ from PIL import Image
 from time import strftime
 from ManSys import ManagementSystem
 
+ms = ManagementSystem()
+
 # Setting the theme for the main window
 ttk.set_appearance_mode('light')
 mainColor = "#8685ef"
@@ -10,6 +12,7 @@ sideColor = "#faf8ff"
 mainScreenColor = '#f2ecff'
 frameColor = '#e9e1ff'
 grayColor = '#737373'
+hoverColor = '#ccccff'
 
 # Setting the main window
 root = ttk.CTk()
@@ -43,45 +46,52 @@ def open_check_in():
     new.geometry('500x450')
 
     # form
-    ttk.CTkLabel(master=new,
-                 text="Car Check In",
-                 text_color=grayColor,
-                 font=('', 20, 'bold'),
-                 fg_color=mainScreenColor, ).place(x=100, y=90)
+    label = ttk.CTkLabel(master=new,
+                         text="Car Check In",
+                         text_color=grayColor,
+                         font=('', 20, 'bold'),
+                         fg_color=mainScreenColor, ).place(x=100, y=90)
 
-    ttk.CTkEntry(master=new,
-                 width=300,
-                 height=40,
-                 placeholder_text='Driver Name',
-                 bg_color=mainScreenColor).place(x=100, y=140)
+    driverName = ttk.CTkEntry(master=new,
+                              width=300,
+                              height=40,
+                              placeholder_text='Driver Name',
+                              bg_color=mainScreenColor).place(x=100, y=140)
 
-    ttk.CTkEntry(master=new,
-                 width=300,
-                 height=40,
-                 placeholder_text='License plate',
-                 bg_color=frameColor
-                 ).place(x=100, y=195)
+    licensePlate = ttk.CTkEntry(master=new,
+                                width=300,
+                                height=40,
+                                placeholder_text='License plate',
+                                bg_color=frameColor
+                                ).place(x=100, y=195)
 
-    ttk.CTkEntry(master=new,
-                 width=300,
-                 height=40,
-                 placeholder_text='Slot code',
-                 bg_color=mainScreenColor
-                 ).place(x=100, y=250)
+    # Getting slot codes
+    slot_codes = ['Auto']
+    lst = ms.get_unused_slots()
+    for slot in lst:
+        slot_codes.append(str(slot.get_slot_code()))
+
+
+    # Dropdown box
+    dropdown = ttk.CTkOptionMenu(master=new,
+                                 height=40,
+                                 values=slot_codes,
+                                 button_color=mainColor,
+                                 fg_color=mainColor,
+                                 button_hover_color=hoverColor,
+                                 dropdown_hover_color=hoverColor
+                                 )
+    dropdown.place(x=100, y=250)
 
     # Submit button
-    def save_data():
-        # Have to implement a getter
-        print('A car have been added')
-
     ttk.CTkButton(master=new,
+                  height=40,
                   text="Add car",
                   fg_color=mainColor,
                   font=("", 15, 'bold'),
                   text_color='white',
                   cursor="hand2",
-                  hover_color='#ccccff',
-                  command=save_data()).place(x=100, y=320)
+                  hover_color='#ccccff', ).place(x=100, y=320)
 
     # Keep the toplevel window in front of the root window
     new.wm_transient(root)
@@ -100,7 +110,6 @@ def open_manage():
     new.geometry("+%d+%d" % (x + 250, y + 100))
     new.geometry('600x520')
 
-
     new.wm_transient(root)
     new.mainloop()
 
@@ -117,7 +126,6 @@ def open_history():
     new.geometry('600x520')
 
     # Displaying history
-
 
     new.wm_transient(root)
     new.mainloop()
@@ -274,9 +282,6 @@ l1.place(x=50, y=480)
 # ======================================================
 # =====================MAIN SCREEN======================
 # ======================================================
-
-
-
 
 
 my_time()
