@@ -37,23 +37,31 @@ class ManagementSystem:
                 print(i.get_slot_code(), i.get_car().get_driver_name(), i.get_car().get_license_plate())
 
     def get_settings(self):
-        for i in self.io_car.get_settings():
+        settings = self.io_car.get_settings()
+        for i in settings:
             print(i)
+        return settings
+
 
     def get_unused_slots(self):
         for i in self.io_car.get_unused_slot():
             print(i.get_slot_code())
+        return self.io_car.get_unused_slot()
 
 
     def get_used_slots(self):
-        self.io_car.get_used_slot()
+        return self.io_car.get_used_slot()
 
     def get_used_slot_count(self):
-        self.io_car.get_used_slot_count()
+        used_slot_count = self.io_car.get_used_slot_count()
+        return used_slot_count
 
     def get_available_slot_count(self):
-        self.io_car.get_available_slot_count()
+        available_slot_count = self.io_car.get_available_slot_count()
+        return available_slot_count
 
+    def get_history(self):
+        return self.io_car.get_history()
     #def get_used_slot(self):
     #    self.get_used_slot()
 
