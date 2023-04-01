@@ -61,7 +61,33 @@ vsb.configure(command = tree.yview)
 tree.configure(yscrollcommand = vsb.set)
 vsb.pack(fill = Y, side = RIGHT)
 
-#
+
 tree.pack()
+# Modify table
+def add_row(tree):
+    frame = Frame(r, width = 300, height = 150, background = "pink")
+    frame.place(x = 100, y = 250)
+
+    # ID
+    lable1 = Label(frame, text = "ID", width = 8)
+    entry1 = Entry(frame, textvariable = id, width = 25)
+    lable1.place(x = 30, y = 20)
+    entry1.place(x = 100, y = 20)
+
+    #Plate
+    #Owner
+    #Checkin
+    #Checkout
+    #Status
+    #Slot
+
+# Button
+insert_button = tk.Button(r, text = "Insert", command = lambda:add_row(tree))
+insert_button.configure(font = ("calibri" ,10), bg = "white", fg = "green")
+insert_button.place(x = 220, y = 250)
+
+delete_button = tk.Button(r, text = "Delete", command = None)
+delete_button.configure(font = ("calibri" ,10), bg = "white", fg = "red")
+delete_button.place(x = 280, y = 250)
 
 r.mainloop()
