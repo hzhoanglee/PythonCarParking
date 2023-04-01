@@ -113,3 +113,7 @@ class IOfuncs:
         print("Available slot count: ", used_slots_count)
         return used_slots_count
 
+    def get_history(self):
+        history = fetch_history_db()
+        return history
+

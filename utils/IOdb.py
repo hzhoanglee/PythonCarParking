@@ -16,6 +16,16 @@ def fetch_check_ins_db():
         print(check_in)
     return check_ins
 
+def fetch_history_db():
+    utils.connect.dbconnection.execute("SELECT * FROM check_ins")
+    check_ins = utils.connect.dbconnection.fetchall()
+    #for check_in in check_ins:
+    #    if check_in['status'] == 1:
+    #        check_ins.remove(check_in)
+    for check_in in check_ins:
+        print(check_in)
+    return check_ins
+
 def fetch_used_slots_db():
     utils.connect.dbconnection.execute("SELECT * FROM check_ins WHERE status = 1")
     used_slots = utils.connect.dbconnection.fetchall()
