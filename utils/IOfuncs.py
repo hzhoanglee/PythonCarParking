@@ -113,6 +113,11 @@ class IOfuncs:
         print("Available slot count: ", used_slots_count)
         return used_slots_count
 
+    def search_slot_by_code(self, slot_code):
+        for slot in self.slot_list:
+            if slot.get_slot_code() == slot_code:
+                return slot
+
     def get_history(self):
         history = fetch_history_db()
         return history

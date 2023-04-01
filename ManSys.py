@@ -32,14 +32,10 @@ class ManagementSystem:
 
     #==================================================================================================================
     def get_slot_list(self):
-        for i in self.io_car.get_slot_list():
-            if not i.is_available():
-                print(i.get_slot_code(), i.get_car().get_driver_name(), i.get_car().get_license_plate())
+        return self.io_car.get_slot_list()
 
     def get_settings(self):
         settings = self.io_car.get_settings()
-        for i in settings:
-            print(i)
         return settings
 
 
@@ -60,6 +56,10 @@ class ManagementSystem:
         available_slot_count = self.io_car.get_available_slot_count()
         return available_slot_count
 
+
+    def search_info(self, driver_name, license_plate, slot_code):
+        if slot_code is not None:
+            return self.io_car.search_slot_by_code(slot_code)
     def get_history(self):
         return self.io_car.get_history()
     #def get_used_slot(self):

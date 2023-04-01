@@ -4,6 +4,7 @@ from time import strftime
 from ManSys import ManagementSystem
 
 ms = ManagementSystem()
+ms.setup_parking_lot()
 
 # Setting the theme for the main window
 ttk.set_appearance_mode('light')
