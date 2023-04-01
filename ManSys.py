@@ -54,6 +54,9 @@ class ManagementSystem:
     def get_available_slot_count(self):
         self.io_car.get_available_slot_count()
 
+    def get_history(self):
+        self.io_car.get_history()
+
     #def get_used_slot(self):
     #    self.get_used_slot()
 
