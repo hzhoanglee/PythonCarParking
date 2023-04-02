@@ -2,6 +2,7 @@ import customtkinter as ttk
 from PIL import Image
 from time import strftime
 from ManSys import ManagementSystem
+from tkinter import messagebox as mbox
 
 ms = ManagementSystem()
 ms.setup_parking_lot()
@@ -21,6 +22,7 @@ root.geometry('800x500')
 root.resizable(False, False)
 root.title("Vịt Quay Parking System")
 root.config(background='#f2ecff')
+
 
 
 # ================================================
@@ -59,7 +61,7 @@ def open_check_in():
                               placeholder_text='Driver Name',
                               bg_color=mainScreenColor)
     driverName.place(x=100, y=140)
-    driverName = driverName.get()
+
 
     licensePlate = ttk.CTkEntry(master=new,
                                 width=300,
@@ -68,8 +70,8 @@ def open_check_in():
                                 bg_color=frameColor
                                 )
     licensePlate.place(x=100, y=195)
-    licensePlate = licensePlate.get()
-    # driver_name = driverName.get()
+
+
 
     # Getting slot codes
     slot_codes = ['Auto']
@@ -87,8 +89,24 @@ def open_check_in():
                                  dropdown_hover_color=hoverColor
                                  )
     dropdown.place(x=100, y=250)
-    slotCode = dropdown.get()
 
+    def submit():
+        # Check if all fields are filled out
+        if driverName.get() and licensePlate.get() and dropdown.get():
+            # Check if dropdown menu has a value selected
+            if dropdown.get() != "Auto":
+                # Add car
+                ms.checkin(driverName.get(), licensePlate.get(), dropdown.get())
+                # Show success message
+                mbox.showinfo("Success", "A car has been added.")
+                # Close the Toplevel window
+                new.destroy()
+            else:
+                # Show error message
+                mbox.showerror("Error", "Please select a parking slot.")
+        else:
+            # Show error message
+            mbox.showerror("Error", "Please input everything.")
     # Submit button
     submitButton = ttk.CTkButton(master=new,
                                  height=40,
@@ -97,9 +115,7 @@ def open_check_in():
                                  font=("", 15, 'bold'),
                                  text_color='white',
                                  cursor="hand2",
-                                 hover_color='#ccccff', command=lambda: ms.checkin(driverName,
-                                                                                   licensePlate,
-                                                                                   slotCode))
+                                 hover_color='#ccccff', command=lambda: submit())
     submitButton.place(x=100, y=320)
 
     # Keep the toplevel window in front of the root window
