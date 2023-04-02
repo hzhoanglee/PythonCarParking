@@ -1,10 +1,12 @@
 import customtkinter as ttk
 import tkinter as tk
 from tkinter import ttk as ttkz
+from tkinter import *
 from PIL import Image
 from time import strftime
 from ManSys import ManagementSystem
 from tkinter import messagebox as mbox
+from utils.connect import mydb
 
 ms = ManagementSystem()
 ms.setup_parking_lot()
@@ -214,10 +216,103 @@ def open_manage():
     new.resizable(False, False)
     new.title("Manage Car Window")
     new.config(background=mainScreenColor)
-    x = root.winfo_x()
-    y = root.winfo_y()
-    new.geometry("+%d+%d" % (x + 250, y + 100))
+    #x = root.winfo_x()
+    #y = root.winfo_y()
+    #new.geometry("+%d+%d" % (x + 250, y + 100))
     new.geometry('600x520')
+
+    # Connect to DB
+    new.dbconnection = mydb.cursor()
+    new.dbconnection.execute("SELECT * FROM check_ins")
+
+    # CSS
+    style = ttkz.Style()
+    style.configure("Treeview",
+                    background = "#f9f9f9",
+                    foreground="#6f727a",
+                    fieldbackground = "#ddeaef",
+                    rowheight= 60,
+                    borderwidth = 5,
+                    border = "#6f727a",
+                    font=(None, 12))
+
+    style.configure("Treeview.Heading",
+                    background="#d7d2ea",
+                    rowheight= 80,
+                    foreground = "#6f727a",
+                    font= ("Bold", 14))
+
+    # Row settings
+    tree = ttkz.Treeview(new, height=10)
+
+    # Delete blank column
+    tree["show"] = 'headings'
+
+    # Define columns number
+    tree["columns"] = ("id", "plate", "owner", "checkin", "checkout", "status", "slot")
+
+    # Individual column size
+    tree.column("id", width=100, minwidth=100, anchor=tk.CENTER)
+    tree.column("plate", width=150, minwidth=150, anchor=tk.CENTER)
+    tree.column("owner", width=150, minwidth=150, anchor=tk.CENTER)
+    tree.column("checkin", width=200, minwidth=200, anchor=tk.CENTER)
+    tree.column("checkout", width=200, minwidth=200, anchor=tk.CENTER)
+    tree.column("status", width=100, minwidth=100, anchor=tk.CENTER)
+    tree.column("slot", width=150, minwidth=150, anchor=tk.CENTER)
+
+    # Columns name
+    tree.heading("id", text="ID", anchor=tk.CENTER)
+    tree.heading("plate", text="License Plate", anchor=tk.CENTER)
+    tree.heading("owner", text="Driver Name", anchor=tk.CENTER)
+    tree.heading("checkin", text="Check-in Time", anchor=tk.CENTER)
+    tree.heading("checkout", text="Check-out Time", anchor=tk.CENTER)
+    tree.heading("status", text="Occupied", anchor=tk.CENTER)
+    tree.heading("slot", text="Slot Code", anchor=tk.CENTER)
+
+    #
+    i = 0
+    for ro in new.dbconnection:
+        tree.insert("", i, text="", values=(ro[0], ro[1], ro[2], ro[3], ro[4], ro[5], ro[6]))
+        i += 1
+
+    # Scroll bar
+    hsb = ttkz.Scrollbar(new, orient="horizontal")
+    hsb.configure(command=tree.xview)
+    tree.configure(xscrollcommand=hsb.set)
+    hsb.pack(fill=X, side=BOTTOM)
+
+    vsb = ttkz.Scrollbar(new, orient="vertical")
+    vsb.configure(command=tree.yview)
+    tree.configure(yscrollcommand=vsb.set)
+    vsb.pack(fill=Y, side=RIGHT)
+
+    tree.pack()
+
+    # Real-time counter
+    # Used slot
+    used_slot = ms.get_used_slot_count()
+    lab1 = Label(new, font=("#6f727a", 14, "bold"), width=15,
+                 height=2,
+                 text = "Occupied slots : ")
+    lab1.place(x=60, y=670)
+    lab2 = Label(new, font=("#6f727a", 16, "bold"),
+                 width=15,
+                 height=2,
+                 text=used_slot)
+    lab2.place(x=250, y=670)
+
+    # Available slots
+    avail_slot = ms.get_available_slot_count()
+    lab3 = Label(new, font=("#6f727a", 14, "bold"), width=15,
+                 height=2,
+                 text="Available slots : ")
+    lab3.place(x=460, y=670)
+    lab4 = Label(new, font=("#6f727a", 16, "bold"),
+                 width=15,
+                 height=2,
+                 text=avail_slot)
+    lab4.place(x=650, y=670)
+
 
     new.wm_transient(root)
     new.mainloop()
