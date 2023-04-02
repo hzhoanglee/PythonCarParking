@@ -30,21 +30,6 @@ class ParkingFloor:
         return self.floor_slots
 
 
-# Setting the theme for the main window
-ttk.set_appearance_mode('light')
-mainColor = "#8685ef"
-sideColor = "#faf8ff"
-mainScreenColor = '#f2ecff'
-frameColor = '#e9e1ff'
-grayColor = '#737373'
-hoverColor = '#ccccff'
-
-# Setting the main window
-root = ttk.CTk()
-root.geometry('970x700')
-root.resizable(True, True)
-root.title("Vịt Quay Parking System")
-root.config(background='#f2ecff')
 
 
 # ================================================
@@ -52,125 +37,11 @@ root.config(background='#f2ecff')
 # ================================================
 
 # Creating date/time
-def my_time():
-    time_string = strftime('%H:%M:%S %p \n %A \n %x')
-    l1.configure(text=time_string)
-    l1.after(1000, my_time)  # time delay of 1000 milliseconds
 
 
 # New window when a sidebar button is clicked
 
 
-
-
-
-
-def open_manage():
-    # Creating the screen
-    new = ttk.CTkToplevel(root)
-    new.resizable(False, False)
-    new.title("Manage Car Window")
-    new.config(background=mainScreenColor)
-    #x = root.winfo_x()
-    #y = root.winfo_y()
-    #new.geometry("+%d+%d" % (x + 250, y + 100))
-    new.geometry('600x520')
-
-    # Connect to DB
-    new.dbconnection = mydb.cursor()
-    new.dbconnection.execute("SELECT * FROM check_ins")
-
-    # CSS
-    style = ttkz.Style()
-    style.configure("Treeview",
-                    background = "#f9f9f9",
-                    foreground="#6f727a",
-                    fieldbackground = "#ddeaef",
-                    rowheight= 60,
-                    borderwidth = 5,
-                    border = "#6f727a",
-                    font=(None, 12))
-
-    style.configure("Treeview.Heading",
-                    background="#d7d2ea",
-                    rowheight= 80,
-                    foreground = "#6f727a",
-                    font= ("Bold", 14))
-
-    # Row settings
-    tree = ttkz.Treeview(new, height=10)
-
-    # Delete blank column
-    tree["show"] = 'headings'
-
-    # Define columns number
-    tree["columns"] = ("id", "plate", "owner", "checkin", "checkout", "status", "slot")
-
-    # Individual column size
-    tree.column("id", width=100, minwidth=100, anchor=tk.CENTER)
-    tree.column("plate", width=150, minwidth=150, anchor=tk.CENTER)
-    tree.column("owner", width=150, minwidth=150, anchor=tk.CENTER)
-    tree.column("checkin", width=200, minwidth=200, anchor=tk.CENTER)
-    tree.column("checkout", width=200, minwidth=200, anchor=tk.CENTER)
-    tree.column("status", width=100, minwidth=100, anchor=tk.CENTER)
-    tree.column("slot", width=150, minwidth=150, anchor=tk.CENTER)
-
-    # Columns name
-    tree.heading("id", text="ID", anchor=tk.CENTER)
-    tree.heading("plate", text="License Plate", anchor=tk.CENTER)
-    tree.heading("owner", text="Driver Name", anchor=tk.CENTER)
-    tree.heading("checkin", text="Check-in Time", anchor=tk.CENTER)
-    tree.heading("checkout", text="Check-out Time", anchor=tk.CENTER)
-    tree.heading("status", text="Occupied", anchor=tk.CENTER)
-    tree.heading("slot", text="Slot Code", anchor=tk.CENTER)
-
-    #
-    i = 0
-    for ro in new.dbconnection:
-        tree.insert("", i, text="", values=(ro[0], ro[1], ro[2], ro[3], ro[4], ro[5], ro[6]))
-        i += 1
-
-    # Scroll bar
-    hsb = ttkz.Scrollbar(new, orient="horizontal")
-    hsb.configure(command=tree.xview)
-    tree.configure(xscrollcommand=hsb.set)
-    hsb.pack(fill=X, side=BOTTOM)
-
-    vsb = ttkz.Scrollbar(new, orient="vertical")
-    vsb.configure(command=tree.yview)
-    tree.configure(yscrollcommand=vsb.set)
-    vsb.pack(fill=Y, side=RIGHT)
-
-    tree.pack()
-
-    # Real-time counter
-    # Used slot
-    used_slot = ms.get_used_slot_count()
-    lab1 = Label(new, font=("#6f727a", 14, "bold"), width=15,
-                 height=2,
-                 text = "Occupied slots : ")
-    lab1.place(x=60, y=670)
-    lab2 = Label(new, font=("#6f727a", 16, "bold"),
-                 width=15,
-                 height=2,
-                 text=used_slot)
-    lab2.place(x=250, y=670)
-
-    # Available slots
-    avail_slot = ms.get_available_slot_count()
-    lab3 = Label(new, font=("#6f727a", 14, "bold"), width=15,
-                 height=2,
-                 text="Available slots : ")
-    lab3.place(x=460, y=670)
-    lab4 = Label(new, font=("#6f727a", 16, "bold"),
-                 width=15,
-                 height=2,
-                 text=avail_slot)
-    lab4.place(x=650, y=670)
-
-
-    new.wm_transient(root)
-    new.mainloop()
 
 
 class ParkingBuildingGUI:
@@ -197,14 +68,14 @@ class ParkingBuildingGUI:
 
     def main_section(self):
         # Print main window in the right of sidebar
-        main = ttk.CTkFrame(master=root, width=500,
+        main = ttk.CTkFrame(master=template.root, width=500,
                             height=1300)
         main.place(x=233, y=100)
 
         # Customize the floor buttons
         s = ttkz.Style()
         s.theme_use('default')
-        s.configure('TNotebook.Tab',font =("clam", 12, "bold"), width=15, height=100, background="#E0E0E0")
+        s.configure('TNotebook.Tab', font=("clam", 12, "bold"), width=15, height=100, background="#E0E0E0")
         s.map("TNotebook", background=[("selected", "pink")])
 
         tab_control = ttkz.Notebook(main)
@@ -248,39 +119,36 @@ class ParkingBuildingGUI:
         else:
             self.open_check_out(slot_code)
 
-    def destroy_screen(self):
-        root.destroy()
-
     def open_check_in(self, slot_code="Auto"):
         # Creating the screen
-        new = ttk.CTkToplevel(root)
+        new = ttk.CTkToplevel(template.root)
         new.resizable(False, False)
         new.title("Car Check In Window")
-        new.config(background=mainScreenColor)
-        x = root.winfo_x()
-        y = root.winfo_y()
+        new.config(background=template.mainScreenColor)
+        x = template.root.winfo_x()
+        y = template.root.winfo_y()
         new.geometry("+%d+%d" % (x + 300, y + 150))
         new.geometry('500x450')
 
         # form
         label = ttk.CTkLabel(master=new,
                              text="Car Check In",
-                             text_color=grayColor,
+                             text_color=template.grayColor,
                              font=('', 20, 'bold'),
-                             fg_color=mainScreenColor, ).place(x=100, y=90)
+                             fg_color=template.mainScreenColor, ).place(x=100, y=90)
 
         driverName = ttk.CTkEntry(master=new,
                                   width=300,
                                   height=40,
                                   placeholder_text='Driver Name',
-                                  bg_color=mainScreenColor)
+                                  bg_color=template.mainScreenColor)
         driverName.place(x=100, y=140)
 
         licensePlate = ttk.CTkEntry(master=new,
                                     width=300,
                                     height=40,
                                     placeholder_text='License plate',
-                                    bg_color=frameColor
+                                    bg_color=template.frameColor
                                     )
         licensePlate.place(x=100, y=195)
 
@@ -294,10 +162,10 @@ class ParkingBuildingGUI:
         dropdown = ttk.CTkOptionMenu(master=new,
                                      height=40,
                                      values=slot_codes,
-                                     button_color=mainColor,
-                                     fg_color=mainColor,
-                                     button_hover_color=hoverColor,
-                                     dropdown_hover_color=hoverColor
+                                     button_color=template.mainColor,
+                                     fg_color=template.mainColor,
+                                     button_hover_color=template.hoverColor,
+                                     dropdown_hover_color=template.hoverColor
                                      )
         dropdown.set(slot_code)
         dropdown.place(x=100, y=250)
@@ -327,7 +195,7 @@ class ParkingBuildingGUI:
         submitButton = ttk.CTkButton(master=new,
                                      height=40,
                                      text="Add car",
-                                     fg_color=mainColor,
+                                     fg_color=template.mainColor,
                                      font=("", 15, 'bold'),
                                      text_color='white',
                                      cursor="hand2",
@@ -335,26 +203,26 @@ class ParkingBuildingGUI:
         submitButton.place(x=100, y=320)
 
         # Keep the toplevel window in front of the root window
-        new.wm_transient(root)
+        new.wm_transient(template.root)
         new.mainloop()
 
     def open_check_out(self, slot_code):
         # Creating the screen
-        new = ttk.CTkToplevel(root)
+        new = ttk.CTkToplevel(template.root)
         new.resizable(False, False)
         new.title("Car Check Out Window")
-        new.config(background=mainScreenColor)
-        x = root.winfo_x()
-        y = root.winfo_y()
+        new.config(background=template.mainScreenColor)
+        x = template.root.winfo_x()
+        y = template.root.winfo_y()
         new.geometry("+%d+%d" % (x + 300, y + 150))
         new.geometry('500x450')
 
         # form
         label = ttk.CTkLabel(master=new,
                              text="Car Check Out",
-                             text_color=grayColor,
+                             text_color=template.grayColor,
                              font=('', 20, 'bold'),
-                             fg_color=mainScreenColor, ).place(x=100, y=90)
+                             fg_color=template.mainScreenColor, ).place(x=100, y=90)
 
         # Getting slot codes
         slot_codes = [slot_code]
@@ -367,10 +235,10 @@ class ParkingBuildingGUI:
         dropdown = ttk.CTkOptionMenu(master=new,
                                      height=40,
                                      values=slot_codes,
-                                     button_color=mainColor,
-                                     fg_color=mainColor,
-                                     button_hover_color=hoverColor,
-                                     dropdown_hover_color=hoverColor
+                                     button_color=template.mainColor,
+                                     fg_color=template.mainColor,
+                                     button_hover_color=template.hoverColor,
+                                     dropdown_hover_color=template.hoverColor
                                      )
         dropdown.set(slot_code)
         dropdown.place(x=100, y=250)
@@ -393,7 +261,7 @@ class ParkingBuildingGUI:
         submitButton = ttk.CTkButton(master=new,
                                      height=40,
                                      text="Check Out",
-                                     fg_color=mainColor,
+                                     fg_color=template.mainColor,
                                      font=("", 15, 'bold'),
                                      text_color='white',
                                      cursor="hand2",
@@ -401,12 +269,8 @@ class ParkingBuildingGUI:
         submitButton.place(x=100, y=320)
 
         # Keep the toplevel window in front of the root window
-        new.wm_transient(root)
+        new.wm_transient(template.root)
         new.mainloop()
-
-
-
-
 
 
 # ================================================
@@ -417,121 +281,252 @@ class ParkingBuildingGUI:
 # =============HEADER=================
 # ====================================
 
-# Creating the header
-header = ttk.CTkFrame(root,
-                      width=1070,
-                      height=60,
-                      fg_color="#8685ef")
-header.place(x=201, y=0)
+class Builder:
+    def __init__(self):
+        # Setting the theme for the main window
+        ttk.set_appearance_mode('light')
+        self.mainColor = "#8685ef"
+        self.sideColor = "#faf8ff"
+        self.mainScreenColor = '#f2ecff'
+        self.frameColor = '#e9e1ff'
+        self.grayColor = '#737373'
+        self.hoverColor = '#ccccff'
 
-# Log out button
-logout_text = ttk.CTkButton(header,
-                            text="Logout",
-                            font=("", 13, "bold"),
-                            fg_color='white',
-                            cursor='hand2',
-                            text_color=mainColor,
-                            hover_color='#ccccff')
-logout_text.place(x=588, y=15)
+        # Setting the main window
+        self.root = ttk.CTk()
+        self.root.geometry('970x700')
+        self.root.resizable(True, True)
+        self.root.title("Vịt Quay Parking System")
+        self.root.config(background='#f2ecff')
 
-# ====================================
-# =============END OF HEADER==========
-# ====================================
+    def build(self):
+        # Creating the header
+        self.header = ttk.CTkFrame(self.root,
+                              width=1070,
+                              height=60,
+                              fg_color="#8685ef")
+        self.header.place(x=201, y=0)
 
-# ===============================================
-# =====================SIDEBAR===================
-# ===============================================
+        # Log out button
+        self.logout_text = ttk.CTkButton(self.header,
+                                    text="Logout",
+                                    font=("", 13, "bold"),
+                                    fg_color='white',
+                                    cursor='hand2',
+                                    text_color=self.mainColor,
+                                    hover_color='#ccccff')
+        self.logout_text.place(x=588, y=15)
 
-# Sidebar
-sideBar = ttk.CTkFrame(master=root, width=200,
-                       height=1300,
-                       fg_color="#faf8ff")
-sideBar.place(x=0, y=0)
+        # ====================================
+        # =============END OF HEADER==========
+        # ====================================
 
-# Logo
-logoImage = ttk.CTkImage(light_image=Image.open("images/icon.png"),
-                         size=(100, 100))
-logo = ttk.CTkLabel(sideBar,
-                    text='',
-                    image=logoImage)
-logo.place(x=50, y=80)
+        # ===============================================
+        # =====================SIDEBAR===================
+        # ===============================================
 
-# Name of the person
-name = ttk.CTkLabel(master=sideBar,
-                    text="ADMIN",
-                    font=("", 15, "bold"),
-                    text_color="#737373")
-name.place(x=75, y=180)
+        # Sidebar
+        self.sideBar = ttk.CTkFrame(master=self.root, width=200,
+                               height=1300,
+                               fg_color="#faf8ff")
+        self.sideBar.place(x=0, y=0)
 
-# ===============================================
-# =====================BUTTONS===================
-# ===============================================
+        # Logo
+        self.logoImage = ttk.CTkImage(light_image=Image.open("images/icon.png"),
+                                 size=(100, 100))
+        self.logo = ttk.CTkLabel(self.sideBar,
+                            text='',
+                            image=self.logoImage)
+        self.logo.place(x=50, y=80)
 
-# Car check in
-carImage = ttk.CTkImage(light_image=Image.open('images/car.png'),
-                        size=(25, 25))
+        # Name of the person
+        self.name = ttk.CTkLabel(master=self.sideBar,
+                            text="ADMIN",
+                            font=("", 15, "bold"),
+                            text_color="#737373")
+        self.name.place(x=75, y=180)
 
-carButton = ttk.CTkButton(master=sideBar,
-                          image=carImage,
-                          text="Car check-in",
-                          width=200,
-                          height=50,
-                          compound='left',
-                          fg_color='transparent',
-                          text_color=mainColor,
-                          font=('', 15, 'bold'),
-                          cursor="hand2",
-                          anchor='center',
-                          hover_color='#ccccff',
-                          command=lambda: gui.open_check_in(),
-                          ).place(x=0, y=250)
+        # ===============================================
+        # =====================BUTTONS===================
+        # ===============================================
 
-# Manage vehicle
+        # Car check in
+        self.carImage = ttk.CTkImage(light_image=Image.open('images/car.png'),
+                                size=(25, 25))
 
-manageImage = ttk.CTkImage(light_image=Image.open('images/manage.png'),
-                           size=(20, 20))
-manageButton = ttk.CTkButton(master=sideBar,
-                             image=manageImage,
-                             text="Manage vehicle",
-                             width=200,
-                             height=50,
-                             compound='left',
-                             fg_color='transparent',
-                             text_color=mainColor,
-                             font=('', 15, 'bold'),
-                             cursor="hand2",
-                             anchor='center',
-                             hover_color='#ccccff',
-                             command=lambda: open_manage()
-                             ).place(x=0, y=300)
+        self.carButton = ttk.CTkButton(master=self.sideBar,
+                                  image=self.carImage,
+                                  text="Car check-in",
+                                  width=200,
+                                  height=50,
+                                  compound='left',
+                                  fg_color='transparent',
+                                  text_color=self.mainColor,
+                                  font=('', 15, 'bold'),
+                                  cursor="hand2",
+                                  anchor='center',
+                                  hover_color='#ccccff',
+                                  command=lambda: gui.open_check_in(),
+                                  ).place(x=0, y=250)
 
-# ===============================================
-# =====================END OF BUTTONS============
-# ===============================================
+        # Manage vehicle
 
-# ===============================================
-# =====================TIME======================
-# ===============================================
+        self.manageImage = ttk.CTkImage(light_image=Image.open('images/manage.png'),
+                                   size=(20, 20))
+        self.manageButton = ttk.CTkButton(master=self.sideBar,
+                                     image=self.manageImage,
+                                     text="Manage vehicle",
+                                     width=200,
+                                     height=50,
+                                     compound='left',
+                                     fg_color='transparent',
+                                     text_color=self.mainColor,
+                                     font=('', 15, 'bold'),
+                                     cursor="hand2",
+                                     anchor='center',
+                                     hover_color='#ccccff',
+                                     command=lambda: self.open_manage()
+                                     ).place(x=0, y=300)
 
+        # ===============================================
+        # =====================END OF BUTTONS============
+        # ===============================================
 
-l1 = ttk.CTkLabel(master=sideBar, font=('', 15, 'bold'), text_color=grayColor)
-l1.place(x=50, y=400)
+        # ===============================================
+        # =====================TIME======================
+        # ===============================================
 
-# ===============================================
-# =====================END OF TIME===============
-# ===============================================
+        self.l1 = ttk.CTkLabel(master=self.sideBar, font=('', 15, 'bold'), text_color=self.grayColor)
+        self.l1.place(x=50, y=400)
 
-# ======================================================
-# =====================END OF SIDEBAR===================
-# ======================================================
+        # ===============================================
+        # =====================END OF TIME===============
+        # ===============================================
 
+        # ======================================================
+        # =====================END OF SIDEBAR===================
+        # ======================================================
 
-# ======================================================
-# =====================MAIN SCREEN======================
-# ======================================================
+        # ======================================================
+        # =====================MAIN SCREEN======================
+        # ======================================================
+
+    def my_time(self):
+        self.time_string = strftime('%H:%M:%S %p \n %A \n %x')
+        self.l1.configure(text=self.time_string)
+        self.l1.after(1000, self.my_time)  # time delay of 1000 milliseconds
+
+    def open_manage(self):
+        # Creating the screen
+        new = ttk.CTkToplevel(self.root)
+        new.resizable(False, False)
+        new.title("Manage Car Window")
+        new.config(background=self.mainScreenColor)
+        # x = root.winfo_x()
+        # y = root.winfo_y()
+        # new.geometry("+%d+%d" % (x + 250, y + 100))
+        new.geometry('600x520')
+
+        # Connect to DB
+        new.dbconnection = mydb.cursor()
+        new.dbconnection.execute("SELECT * FROM check_ins")
+
+        # CSS
+        style = ttkz.Style()
+        style.configure("Treeview",
+                        background="#f9f9f9",
+                        foreground="#6f727a",
+                        fieldbackground="#ddeaef",
+                        rowheight=60,
+                        borderwidth=5,
+                        border="#6f727a",
+                        font=(None, 12))
+
+        style.configure("Treeview.Heading",
+                        background="#d7d2ea",
+                        rowheight=80,
+                        foreground="#6f727a",
+                        font=("Bold", 14))
+
+        # Row settings
+        tree = ttkz.Treeview(new, height=10)
+
+        # Delete blank column
+        tree["show"] = 'headings'
+
+        # Define columns number
+        tree["columns"] = ("id", "plate", "owner", "checkin", "checkout", "status", "slot")
+
+        # Individual column size
+        tree.column("id", width=100, minwidth=100, anchor=tk.CENTER)
+        tree.column("plate", width=150, minwidth=150, anchor=tk.CENTER)
+        tree.column("owner", width=150, minwidth=150, anchor=tk.CENTER)
+        tree.column("checkin", width=200, minwidth=200, anchor=tk.CENTER)
+        tree.column("checkout", width=200, minwidth=200, anchor=tk.CENTER)
+        tree.column("status", width=100, minwidth=100, anchor=tk.CENTER)
+        tree.column("slot", width=150, minwidth=150, anchor=tk.CENTER)
+
+        # Columns name
+        tree.heading("id", text="ID", anchor=tk.CENTER)
+        tree.heading("plate", text="License Plate", anchor=tk.CENTER)
+        tree.heading("owner", text="Driver Name", anchor=tk.CENTER)
+        tree.heading("checkin", text="Check-in Time", anchor=tk.CENTER)
+        tree.heading("checkout", text="Check-out Time", anchor=tk.CENTER)
+        tree.heading("status", text="Occupied", anchor=tk.CENTER)
+        tree.heading("slot", text="Slot Code", anchor=tk.CENTER)
+
+        #
+        i = 0
+        for ro in new.dbconnection:
+            tree.insert("", i, text="", values=(ro[0], ro[1], ro[2], ro[3], ro[4], ro[5], ro[6]))
+            i += 1
+
+        # Scroll bar
+        hsb = ttkz.Scrollbar(new, orient="horizontal")
+        hsb.configure(command=tree.xview)
+        tree.configure(xscrollcommand=hsb.set)
+        hsb.pack(fill=X, side=BOTTOM)
+
+        vsb = ttkz.Scrollbar(new, orient="vertical")
+        vsb.configure(command=tree.yview)
+        tree.configure(yscrollcommand=vsb.set)
+        vsb.pack(fill=Y, side=RIGHT)
+
+        tree.pack()
+
+        # Real-time counter
+        # Used slot
+        used_slot = ms.get_used_slot_count()
+        lab1 = Label(new, font=("#6f727a", 14, "bold"), width=15,
+                     height=2,
+                     text="Occupied slots : ")
+        lab1.place(x=60, y=670)
+        lab2 = Label(new, font=("#6f727a", 16, "bold"),
+                     width=15,
+                     height=2,
+                     text=used_slot)
+        lab2.place(x=250, y=670)
+
+        # Available slots
+        avail_slot = ms.get_available_slot_count()
+        lab3 = Label(new, font=("#6f727a", 14, "bold"), width=15,
+                     height=2,
+                     text="Available slots : ")
+        lab3.place(x=460, y=670)
+        lab4 = Label(new, font=("#6f727a", 16, "bold"),
+                     width=15,
+                     height=2,
+                     text=avail_slot)
+        lab4.place(x=650, y=670)
+
+        new.wm_transient(self.root)
+        new.mainloop()
+
 
 # display to main screen something
+template = Builder()
+template.build()
 gui = ParkingBuildingGUI()
 gui.main_section()
-my_time()
-root.mainloop()
+template.my_time()
+template.root.mainloop()
