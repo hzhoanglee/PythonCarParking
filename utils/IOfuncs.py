@@ -48,7 +48,7 @@ class IOfuncs:
     #parking a car(checking in)
     def checkin_car(self, driver_name, license_plate, slot_code = None):
         car = Car(driver_name, license_plate)
-        if slot_code is None or slot_code == 'Auto':
+        if slot_code is None or slot_code == 'Auto' or slot_code == '':
             for slot in self.slot_list:
                 if slot.is_available():
                     slot.check_in(car)
