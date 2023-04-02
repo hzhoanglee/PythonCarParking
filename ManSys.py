@@ -11,6 +11,12 @@ class ManagementSystem:
         self.io_car.setup_parking_lot()
 
     def checkin(self, driver_name, license_plate, slot_code):
+        if driver_name is None or driver_name == '':
+            print("Driver name is required")
+            return -1
+        if license_plate is None or license_plate == '':
+            print("License plate is required")
+            return -1
         self.io_car.checkin_car(driver_name, license_plate, slot_code)
 
     def checkout(self, slot_code):
