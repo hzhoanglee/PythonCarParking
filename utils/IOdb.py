@@ -93,11 +93,12 @@ def check_out_db(slot_code):
     #get the time diff from the db sql
     utils.connect.dbconnection.execute("SELECT TIMEDIFF(NOW(), checkin_time) AS timediff FROM check_ins WHERE slot_code = %s",
                          (slot_code,))
-    timediff = utils.connect.dbconnection.fetchone()
-    utils.connect.dbconnection.execute("UPDATE check_ins SET checkout_time = NOW(), status = 0 WHERE slot_code = %s", (slot_code,))
+    timediff = utils.connect.dbconnection.fetchall()
+    #update the checkout time and status
+    utils.connect.dbconnection.execute("UPDATE check_ins SET checkout_time = NOW(), status = 0 WHERE slot_code = %s AND status = 1", (slot_code,))
     utils.connect.mydb.commit()
     #convert the time diff to hours(int)
-    datetime_diff = timediff["timediff"]
+    datetime_diff = timediff[0]["timediff"]
     datetime_diff = datetime_diff.total_seconds() / 3600
     return datetime_diff
 

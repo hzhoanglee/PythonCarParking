@@ -38,7 +38,7 @@ class IOfuncs:
                     gen_slot_code = f"{i[0]}{j}-{k}"
                     self.slot_list.append(Slot(gen_slot_code))
 
-        online_slots = fetch_check_ins_db()
+        online_slots = fetch_used_slots_db()
         for slot in self.slot_list:
             for online_slot in online_slots:
                 if slot.get_slot_code() == online_slot['slot_code']:
@@ -90,9 +90,11 @@ class IOfuncs:
         return self.settings
 
     def get_used_slot(self):
-        used_slots = fetch_used_slots_db()
+        used_slots = []
+        for slot in self.slot_list:
+            if not slot.is_available():
+                used_slots.append(slot)
         return used_slots
-
     def get_unused_slot(self):
         available_slots = []
         for slot in self.slot_list:
