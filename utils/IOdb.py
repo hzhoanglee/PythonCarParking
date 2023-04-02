@@ -96,8 +96,15 @@ def check_out_db(slot_code):
                          (slot_code,))
     timediff = utils.connect.dbconnection.fetchall()
     datetime_diff_str = str(timediff[0]["timediff"])
-    datetime_diff = datetime.datetime.strptime(datetime_diff_str, "%H:%M:%S")
-    hours = int(datetime_diff.second / 3600)
+    # check if match format
+    try:
+        datetime_diff = datetime.datetime.strptime(datetime_diff_str, "%H:%M:%S")
+        hours = datetime_diff.second
+        hours = hours / 3600
+    except ValueError:
+        datetime_diff = datetime.datetime.strptime(datetime_diff_str, "%d days, %H:%M:%S")
+        hours = datetime_diff.day * 24 + datetime_diff.hour
+
     #update the checkout time and status
     utils.connect.dbconnection.execute("UPDATE check_ins SET checkout_time = NOW(), status = 0 WHERE slot_code = %s AND status = 1", (slot_code,))
     utils.connect.mydb.commit()
