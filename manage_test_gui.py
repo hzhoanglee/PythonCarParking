@@ -7,6 +7,7 @@ from time import strftime
 from ManSys import ManagementSystem
 from tkinter import messagebox as mbox
 from utils.connect import mydb
+from login_verification import LoginVerification
 
 ms = ManagementSystem()
 ms.setup_parking_lot()
@@ -28,20 +29,6 @@ class ParkingFloor:
 
     def get_floor_slots(self):
         return self.floor_slots
-
-
-
-
-# ================================================
-# ===================FUNCTIONS====================
-# ================================================
-
-# Creating date/time
-
-
-# New window when a sidebar button is clicked
-
-
 
 
 class ParkingBuildingGUI:
@@ -224,12 +211,26 @@ class ParkingBuildingGUI:
                              font=('', 20, 'bold'),
                              fg_color=template.mainScreenColor, ).place(x=100, y=90)
 
+        # Get Car info
+        slot = ms.get_slot_by_code(slot_code)
+        car = slot.get_car()
+        driverName = car.get_driver_name()
+        licensePlate = car.get_license_plate()
+
+        # Display car info
+        ttk.CTkLabel(master=new,
+                     text="Driver Name: " + driverName,
+                     text_color=template.grayColor,
+                     font=('', 15, 'bold'),
+                     fg_color=template.mainScreenColor, ).place(x=100, y=140)
+        ttk.CTkLabel(master=new,
+                     text="License Plate: " + licensePlate,
+                     text_color=template.grayColor,
+                     font=('', 15, 'bold'),
+                     fg_color=template.mainScreenColor, ).place(x=100, y=195)
+
         # Getting slot codes
         slot_codes = [slot_code]
-        lst = ms.get_used_slots()
-        for slot in lst:
-            print(slot)
-            # slot_codes.append(str(slot.get_slot_code()))
 
         # Dropdown box
         dropdown = ttk.CTkOptionMenu(master=new,
@@ -273,17 +274,22 @@ class ParkingBuildingGUI:
         new.mainloop()
 
 
-# ================================================
-# ===================END OF FUNCTIONS=============
-# ================================================
-
-# ====================================
-# =============HEADER=================
-# ====================================
-
 class Builder:
     def __init__(self):
+        self.root = None
         # Setting the theme for the main window
+        self.manageButton = None
+        self.logout_text = None
+        self.manageImage = None
+        self.l1 = None
+        self.logo = None
+        self.carButton = None
+        self.name = None
+        self.carImage = None
+        self.logoImage = None
+        self.sideBar = None
+        self.header = None
+        self.time_string = None
         ttk.set_appearance_mode('light')
         self.mainColor = "#8685ef"
         self.sideColor = "#faf8ff"
@@ -291,7 +297,10 @@ class Builder:
         self.frameColor = '#e9e1ff'
         self.grayColor = '#737373'
         self.hoverColor = '#ccccff'
+        self.login = LoginVerification()
+        self.build_root()
 
+    def build_root(self):
         # Setting the main window
         self.root = ttk.CTk()
         self.root.geometry('970x700')
@@ -299,22 +308,79 @@ class Builder:
         self.root.title("Vịt Quay Parking System")
         self.root.config(background='#f2ecff')
 
+    def kill_root(self):
+        self.root.destroy()
+        self.build_root()
+        self.login_screen()
+
+    def login_screen(self):
+        # Creating the screen
+        self.login_window = ttk.CTk()
+        self.login_window.geometry('970x700')
+        self.login_window.resizable(True, True)
+        self.login_window.title("Vịt Quay Parking System")
+        self.login_window.config(background='#f2ecff')
+
+        # Creating the login form
+        self.l1 = ttk.CTkLabel(master=self.login_window,
+                               text="Vịt Quay Parking System",
+                               text_color=self.grayColor,
+                               font=('', 30, 'bold'),
+                               fg_color=self.mainScreenColor, ).place(x=250, y=90)
+
+        # Password label
+        passwordLabel = ttk.CTkLabel(master=self.login_window,
+                                     text="Password",
+                                     text_color=self.grayColor,
+                                     font=('', 15, 'bold'),
+                                     fg_color=self.mainScreenColor, ).place(x=250, y=280)
+
+        # Password entry
+        passwordEntry = ttk.CTkEntry(master=self.login_window,
+                                     width=200,
+                                     fg_color=self.mainColor,
+                                     font=('', 15, 'bold'),
+                                     border_color=self.mainColor,
+                                     show="*")
+        passwordEntry.place(x=250, y=310)
+
+        # Login button
+        loginButton = ttk.CTkButton(master=self.login_window,
+                                    height=40,
+                                    text="Login",
+                                    fg_color=self.mainColor,
+                                    font=("", 15, 'bold'),
+                                    text_color='white',
+                                    cursor="hand2",
+                                    hover_color='#ccccff', command=lambda: self.check_login(passwordEntry.get()))
+        loginButton.place(x=250, y=380)
+
+        # Keep the toplevel window in front of the root window
+        self.login_window.mainloop()
+
+    def check_login(self, password):
+        if self.login.verify_password(password):
+            self.login_window.destroy()
+            self.run()
+        else:
+            mbox.showerror("Error", "Wrong password")
+
     def build(self):
         # Creating the header
         self.header = ttk.CTkFrame(self.root,
-                              width=1070,
-                              height=60,
-                              fg_color="#8685ef")
+                                   width=1070,
+                                   height=60,
+                                   fg_color="#8685ef")
         self.header.place(x=201, y=0)
 
         # Log out button
         self.logout_text = ttk.CTkButton(self.header,
-                                    text="Logout",
-                                    font=("", 13, "bold"),
-                                    fg_color='white',
-                                    cursor='hand2',
-                                    text_color=self.mainColor,
-                                    hover_color='#ccccff')
+                                         text="Logout",
+                                         font=("", 13, "bold"),
+                                         fg_color='white',
+                                         cursor='hand2',
+                                         text_color=self.mainColor,
+                                         hover_color='#ccccff', command=lambda: self.kill_root())
         self.logout_text.place(x=588, y=15)
 
         # ====================================
@@ -327,23 +393,23 @@ class Builder:
 
         # Sidebar
         self.sideBar = ttk.CTkFrame(master=self.root, width=200,
-                               height=1300,
-                               fg_color="#faf8ff")
+                                    height=1300,
+                                    fg_color="#faf8ff")
         self.sideBar.place(x=0, y=0)
 
         # Logo
         self.logoImage = ttk.CTkImage(light_image=Image.open("images/icon.png"),
-                                 size=(100, 100))
+                                      size=(100, 100))
         self.logo = ttk.CTkLabel(self.sideBar,
-                            text='',
-                            image=self.logoImage)
+                                 text='',
+                                 image=self.logoImage)
         self.logo.place(x=50, y=80)
 
         # Name of the person
         self.name = ttk.CTkLabel(master=self.sideBar,
-                            text="ADMIN",
-                            font=("", 15, "bold"),
-                            text_color="#737373")
+                                 text="ADMIN",
+                                 font=("", 15, "bold"),
+                                 text_color="#737373")
         self.name.place(x=75, y=180)
 
         # ===============================================
@@ -352,41 +418,41 @@ class Builder:
 
         # Car check in
         self.carImage = ttk.CTkImage(light_image=Image.open('images/car.png'),
-                                size=(25, 25))
+                                     size=(25, 25))
 
         self.carButton = ttk.CTkButton(master=self.sideBar,
-                                  image=self.carImage,
-                                  text="Car check-in",
-                                  width=200,
-                                  height=50,
-                                  compound='left',
-                                  fg_color='transparent',
-                                  text_color=self.mainColor,
-                                  font=('', 15, 'bold'),
-                                  cursor="hand2",
-                                  anchor='center',
-                                  hover_color='#ccccff',
-                                  command=lambda: gui.open_check_in(),
-                                  ).place(x=0, y=250)
+                                       image=self.carImage,
+                                       text="Car check-in",
+                                       width=200,
+                                       height=50,
+                                       compound='left',
+                                       fg_color='transparent',
+                                       text_color=self.mainColor,
+                                       font=('', 15, 'bold'),
+                                       cursor="hand2",
+                                       anchor='center',
+                                       hover_color='#ccccff',
+                                       command=lambda: gui.open_check_in(),
+                                       ).place(x=0, y=250)
 
         # Manage vehicle
 
         self.manageImage = ttk.CTkImage(light_image=Image.open('images/manage.png'),
-                                   size=(20, 20))
+                                        size=(20, 20))
         self.manageButton = ttk.CTkButton(master=self.sideBar,
-                                     image=self.manageImage,
-                                     text="Manage vehicle",
-                                     width=200,
-                                     height=50,
-                                     compound='left',
-                                     fg_color='transparent',
-                                     text_color=self.mainColor,
-                                     font=('', 15, 'bold'),
-                                     cursor="hand2",
-                                     anchor='center',
-                                     hover_color='#ccccff',
-                                     command=lambda: self.open_manage()
-                                     ).place(x=0, y=300)
+                                          image=self.manageImage,
+                                          text="Manage vehicle",
+                                          width=200,
+                                          height=50,
+                                          compound='left',
+                                          fg_color='transparent',
+                                          text_color=self.mainColor,
+                                          font=('', 15, 'bold'),
+                                          cursor="hand2",
+                                          anchor='center',
+                                          hover_color='#ccccff',
+                                          command=lambda: self.open_manage()
+                                          ).place(x=0, y=300)
 
         # ===============================================
         # =====================END OF BUTTONS============
@@ -422,9 +488,6 @@ class Builder:
         new.resizable(False, False)
         new.title("Manage Car Window")
         new.config(background=self.mainScreenColor)
-        # x = root.winfo_x()
-        # y = root.winfo_y()
-        # new.geometry("+%d+%d" % (x + 250, y + 100))
         new.geometry('600x520')
 
         # Connect to DB
@@ -522,11 +585,14 @@ class Builder:
         new.wm_transient(self.root)
         new.mainloop()
 
+    def run(self):
+        self.build()
+        self.my_time()
+        self.root.mainloop()
 
-# display to main screen something
-template = Builder()
-template.build()
-gui = ParkingBuildingGUI()
-gui.main_section()
-template.my_time()
-template.root.mainloop()
+
+if __name__ == '__main__':
+    template = Builder()
+    gui = ParkingBuildingGUI()
+    gui.main_section()
+    template.login_screen()
