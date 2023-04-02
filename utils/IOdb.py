@@ -35,7 +35,7 @@ def fetch_used_slots_db():
 
 
 def fetch_used_slot_count_db():
-    utils.connect.dbconnection.execute("SELECT COUNT(slot_code) FROM check_ins")
+    utils.connect.dbconnection.execute("SELECT COUNT(slot_code) FROM check_ins WHERE status = 1 ")
     used_slots_count = utils.connect.dbconnection.fetchall()
     used_slots_count = used_slots_count[0]["COUNT(slot_code)"]
     return used_slots_count
@@ -99,7 +99,7 @@ def check_out_db(slot_code):
     utils.connect.mydb.commit()
     #convert the time diff to hours(int)
     datetime_diff = timediff[0]["timediff"]
-    datetime_diff = datetime_diff.total_seconds() / 3600
-    return datetime_diff
+    hours = int(datetime_diff.total_seconds() / 3600)
+    return hours
 
 #=======================================================================================================================

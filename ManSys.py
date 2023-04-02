@@ -54,6 +54,10 @@ class ManagementSystem:
     def get_used_slots(self):
         return self.io_car.get_used_slot()
 
+    def get_max_slot_count(self):
+        max_slot_count = self.io_car.get_max_slots_count()
+        return max_slot_count
+
     def get_used_slot_count(self):
         used_slot_count = self.io_car.get_used_slot_count()
         return used_slot_count

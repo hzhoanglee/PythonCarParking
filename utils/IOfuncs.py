@@ -110,10 +110,15 @@ class IOfuncs:
 
     #get the count of available slots
     def get_available_slot_count(self):
-        max_slots_count = int(self.settings.get_X_VALUE()) * int(self.settings.get_Y_VALUE()) * int(self.settings.get_Z_VALUE())
+        max_slots_count = self.get_max_slots_count()
         used_slots_count = fetch_unused_slot_count_db(max_slots_count)
         print("Available slot count: ", used_slots_count)
         return used_slots_count
+
+    #get max slots count
+    def get_max_slots_count(self):
+        max_slots_count = int(self.settings.get_X_VALUE()) * int(self.settings.get_Y_VALUE()) * int(self.settings.get_Z_VALUE())
+        return max_slots_count
 
     def get_history(self):
         history = fetch_history_db()
