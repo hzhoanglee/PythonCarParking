@@ -1,9 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
 from ManSys import ManagementSystem
+from login_verification import LoginVerification
 
-ms = ManagementSystem()
-ms.setup_parking_lot()
+#ms = ManagementSystem()
+#ms.setup_parking_lot()
 
 
 class ParkingFloor:
@@ -25,19 +26,19 @@ class ParkingFloor:
 
 
 class ParkingBuildingGUI:
-    def __init__(self, tk_window):
+    def __init__(self, tk_window, ms):
         self.window = tk_window
         self.window.title("Parking Building")
         self.window.geometry("800x600")
         self.window.resizable(True, True)
-
-        self.building_settings = ms.get_settings()
+        self.ms = ms
+        self.building_settings = self.ms.get_settings()
         floor_count = int(self.building_settings.get_Z_VALUE())
         self.building_floors = []
         for i in range(floor_count):
             floor_code = f"F{i}"
             floor_slots = []
-            for slot in ms.get_slot_list():
+            for slot in self.ms.get_slot_list():
                 if slot.get_slot_code().endswith(floor_code):
                     floor_slots.append(slot)
             self.building_floors.append(ParkingFloor(floor_code, floor_slots))
@@ -78,7 +79,7 @@ class ParkingBuildingGUI:
             row = i // len(self.x_list)
             col = i % len(self.x_list)
             slot_button_list[i].grid(row=row, column=col)
-            if ms.get_slot_by_code(slot_code).is_available():
+            if self.ms.get_slot_by_code(slot_code).is_available():
                 slot_button_list[i].config(bg="green")
             else:
                 slot_button_list[i].config(bg="red")
@@ -92,7 +93,7 @@ class ParkingBuildingGUI:
         self.slot_window_tk.focus_set()
         self.slot_window_tk.transient(self.window)
 
-        slot = ms.get_slot_by_code(slot_code)
+        slot = self.ms.get_slot_by_code(slot_code)
         if slot.is_available():
             #insert label for slot status: Status: Available
             slot_status_label = tk.Label(self.slot_window_tk, text="Status: Available")
@@ -154,7 +155,7 @@ class ParkingBuildingGUI:
         # create a button for checkout
         driver_name = driver_name_entry.get()
         car_plate = car_plate_entry.get()
-        ms.checkin(driver_name, car_plate, slot_code)
+        self.ms.checkin(driver_name, car_plate, slot_code)
         driver_name_entry.delete(0, tk.END)
         car_plate_entry.delete(0, tk.END)
         # label for insert after checkin
@@ -185,7 +186,7 @@ class ParkingBuildingGUI:
 
     def check_out_button(self, slot_code, tk_window):
         # create a button for checkout
-        fee = ms.checkout(slot_code)
+        fee = self.ms.checkout(slot_code)
         # label for insert after checkout
         checkout_label = tk.Label(tk_window, text="checkout successfully")
         checkout_label.pack()
@@ -196,9 +197,10 @@ class ParkingBuildingGUI:
         #tk_window.destroy()
 
 class Dashboard:
-    def __init__(self):
+    def __init__(self, ms):
+        self.ms = ms
         self.dashboard_window = tk.Tk()
-        self.ParkingBuildingGUI = ParkingBuildingGUI(self.dashboard_window)
+        self.ParkingBuildingGUI = ParkingBuildingGUI(self.dashboard_window, self.ms)
         self.dashboard_window.title("Dashboard")
         # dashboard window must bigger than ParkingBuildingGUI
         self.dashboard_window.geometry("1000x800")
@@ -230,11 +232,11 @@ class Dashboard:
         tab_control.add(tab2, text="General Info")
         tab_control.pack(expand=1, fill="both")
         # get max slot number
-        max_slot_number = ms.get_max_slot_count()
+        max_slot_number = self.ms.get_max_slot_count()
         # get used slot number
-        used_slot_number = ms.io_car.get_used_slot_count()
+        used_slot_number = self.ms.io_car.get_used_slot_count()
         # get free slot number
-        free_slot_number = ms.io_car.get_available_slot_count()
+        free_slot_number = self.ms.io_car.get_available_slot_count()
 
         # using label to show text
         general_info_label = tk.Label(tab2, text="Max Slot Number: " + str(max_slot_number)
@@ -264,8 +266,46 @@ class Dashboard:
 
     def refresh(self):
         self.dashboard_window.destroy()
-        self.__init__()
+        self.__init__(self.ms)
         self.main_window()
+
+class LoginWindow:
+    def __init__(self):
+        self.login_window = tk.Tk()
+        self.login_window.title("Login")
+        self.login_window.geometry("400x300")
+        self.login_window.resizable(True, True)
+        self.lg = LoginVerification()
+
+    def login_window_main(self):
+        # create a label for password
+        password_label = tk.Label(self.login_window, text="Password")
+        password_label.pack()
+        # create a entry for password
+        password_entry = tk.Entry(self.login_window, show="*")
+        password_entry.pack()
+        # create a button for login
+        login_button = tk.Button(self.login_window,
+                                 text="Login",
+                                 command=lambda: self.login_button(password_entry))
+        login_button.pack()
+        self.login_window.protocol("WM_DELETE_WINDOW", lambda: self.login_window.destroy())
+        self.login_window.mainloop()
+
+    def login_button(self, password_entry):
+        password = password_entry.get()
+        if self.lg.verify_password(password):
+            password_entry.delete(0, tk.END)
+            self.login_window.destroy()
+            ms = ManagementSystem()
+            ms.setup_parking_lot()
+            d = Dashboard(ms)
+            d.main_window()
+        else:
+            lbl = tk.Label(self.login_window, text="Wrong password")
+            lbl.pack()
+            password_entry.delete(0, tk.END)
+
 if __name__ == "__main__":
-    d = Dashboard()
-    d.main_window()
+    login = LoginWindow()
+    login.login_window_main()
