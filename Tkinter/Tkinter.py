@@ -75,8 +75,7 @@ class table(tk.Tk):
         self.delete_button = tk.Button(self.r, text="Delete", command= None)
         self.delete_button.configure(font=("calibri", 10), bg="white", fg="red")
         self.delete_button.place(x=280, y=250)
-
-
+        
     def delete_row(self):
         selected_item = self.tree.selection()[0]
         #print(self.tree.item(selected_item)["value"])
@@ -92,5 +91,5 @@ class table(tk.Tk):
 """
 
 if __name__ == "__main__":
-table = table()
-table.mainloop()
+    table = table()
+    table.mainloop()
