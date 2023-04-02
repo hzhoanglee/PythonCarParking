@@ -1,4 +1,5 @@
 import utils.connect
+import datetime
 
 #=======================================================================================================================
 def fetch_settings_db():
@@ -94,12 +95,16 @@ def check_out_db(slot_code):
     utils.connect.dbconnection.execute("SELECT TIMEDIFF(NOW(), checkin_time) AS timediff FROM check_ins WHERE slot_code = %s",
                          (slot_code,))
     timediff = utils.connect.dbconnection.fetchall()
+    datetime_diff_str = str(timediff[0]["timediff"])
+    datetime_diff = datetime.datetime.strptime(datetime_diff_str, "%H:%M:%S")
+    hours = int(datetime_diff.second / 3600)
     #update the checkout time and status
     utils.connect.dbconnection.execute("UPDATE check_ins SET checkout_time = NOW(), status = 0 WHERE slot_code = %s AND status = 1", (slot_code,))
     utils.connect.mydb.commit()
     #convert the time diff to hours(int)
-    datetime_diff = timediff[0]["timediff"]
-    hours = int(datetime_diff.total_seconds() / 3600)
+    #datetime_diff = timediff[0]["timediff"]
+    print(datetime_diff)
+    print(hours)
     return hours
 
 #=======================================================================================================================
