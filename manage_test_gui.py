@@ -17,7 +17,7 @@ hoverColor = '#ccccff'
 
 # Setting the main window
 root = ttk.CTk()
-root.geometry('800x600')
+root.geometry('800x500')
 root.resizable(False, False)
 root.title("Vịt Quay Parking System")
 root.config(background='#f2ecff')
@@ -57,21 +57,25 @@ def open_check_in():
                               width=300,
                               height=40,
                               placeholder_text='Driver Name',
-                              bg_color=mainScreenColor).place(x=100, y=140)
+                              bg_color=mainScreenColor)
+    driverName.place(x=100, y=140)
+    driverName = driverName.get()
 
     licensePlate = ttk.CTkEntry(master=new,
                                 width=300,
                                 height=40,
                                 placeholder_text='License plate',
                                 bg_color=frameColor
-                                ).place(x=100, y=195)
+                                )
+    licensePlate.place(x=100, y=195)
+    licensePlate = licensePlate.get()
+    # driver_name = driverName.get()
 
     # Getting slot codes
     slot_codes = ['Auto']
     lst = ms.get_unused_slots()
     for slot in lst:
         slot_codes.append(str(slot.get_slot_code()))
-
 
     # Dropdown box
     dropdown = ttk.CTkOptionMenu(master=new,
@@ -83,20 +87,23 @@ def open_check_in():
                                  dropdown_hover_color=hoverColor
                                  )
     dropdown.place(x=100, y=250)
+    slotCode = dropdown.get()
 
     # Submit button
-    ttk.CTkButton(master=new,
-                  height=40,
-                  text="Add car",
-                  fg_color=mainColor,
-                  font=("", 15, 'bold'),
-                  text_color='white',
-                  cursor="hand2",
-                  hover_color='#ccccff', ).place(x=100, y=320)
+    submitButton = ttk.CTkButton(master=new,
+                                 height=40,
+                                 text="Add car",
+                                 fg_color=mainColor,
+                                 font=("", 15, 'bold'),
+                                 text_color='white',
+                                 cursor="hand2",
+                                 hover_color='#ccccff', command=lambda: ms.checkin(driverName,
+                                                                                   licensePlate,
+                                                                                   slotCode))
+    submitButton.place(x=100, y=320)
 
     # Keep the toplevel window in front of the root window
     new.wm_transient(root)
-
     new.mainloop()
 
 
@@ -110,23 +117,6 @@ def open_manage():
     y = root.winfo_y()
     new.geometry("+%d+%d" % (x + 250, y + 100))
     new.geometry('600x520')
-
-    new.wm_transient(root)
-    new.mainloop()
-
-
-def open_history():
-    # Creating the screen
-    new = ttk.CTkToplevel(root)
-    new.resizable(False, False)
-    new.title("History")
-    new.config(background=mainScreenColor)
-    x = root.winfo_x()
-    y = root.winfo_y()
-    new.geometry("+%d+%d" % (x + 250, y + 100))
-    new.geometry('600x520')
-
-    # Displaying history
 
     new.wm_transient(root)
     new.mainloop()
@@ -190,21 +180,6 @@ name.place(x=75, y=180)
 # =====================BUTTONS===================
 # ===============================================
 
-# Home
-homeImage = ttk.CTkImage(light_image=Image.open('images/home.png'),
-                         size=(25, 25))
-homeButton = ttk.CTkButton(master=sideBar,
-                           image=homeImage,
-                           text="Home",
-                           width=200,
-                           height=50,
-                           compound='left',
-                           fg_color='transparent',
-                           text_color=mainColor,
-                           font=('', 15, 'bold'),
-                           cursor="hand2",
-                           hover_color='#ccccff').place(x=0, y=250)
-
 # Car check in
 carImage = ttk.CTkImage(light_image=Image.open('images/car.png'),
                         size=(25, 25))
@@ -222,7 +197,7 @@ carButton = ttk.CTkButton(master=sideBar,
                           anchor='center',
                           hover_color='#ccccff',
                           command=lambda: open_check_in(),
-                          ).place(x=0, y=300)
+                          ).place(x=0, y=250)
 
 # Manage vehicle
 
@@ -241,23 +216,7 @@ manageButton = ttk.CTkButton(master=sideBar,
                              anchor='center',
                              hover_color='#ccccff',
                              command=lambda: open_manage()
-                             ).place(x=0, y=350)
-
-# History
-historyImage = ttk.CTkImage(light_image=Image.open('images/history.png'),
-                            size=(25, 25))
-historyButton = ttk.CTkButton(master=sideBar,
-                              image=historyImage,
-                              text="History",
-                              width=200,
-                              height=50,
-                              compound='left',
-                              fg_color='transparent',
-                              text_color=mainColor,
-                              font=('', 15, 'bold'),
-                              cursor="hand2",
-                              anchor='center',
-                              hover_color='#ccccff').place(x=0, y=400)
+                             ).place(x=0, y=300)
 
 # ===============================================
 # =====================END OF BUTTONS============
@@ -269,7 +228,7 @@ historyButton = ttk.CTkButton(master=sideBar,
 
 
 l1 = ttk.CTkLabel(master=sideBar, font=('', 15, 'bold'), text_color=grayColor)
-l1.place(x=50, y=480)
+l1.place(x=50, y=400)
 
 # ===============================================
 # =====================END OF TIME===============
