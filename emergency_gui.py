@@ -5,6 +5,7 @@ from ManSys import ManagementSystem
 ms = ManagementSystem()
 ms.setup_parking_lot()
 
+
 class ParkingFloor:
     def __init__(self, floor_code, floor_slots):
         self.floor_code = floor_code
@@ -21,6 +22,7 @@ class ParkingFloor:
 
     def get_floor_slots(self):
         return self.floor_slots
+
 
 class ParkingBuildingGUI:
     def __init__(self):
@@ -48,6 +50,7 @@ class ParkingBuildingGUI:
         self.y_list = []
         for i in range(int(self.building_settings.get_Y_VALUE())):
             self.y_list.append(i)
+
     def main_window(self):
         # main window with tabs each tab is a floor
         tab_control = ttk.Notebook(self.window)
@@ -62,7 +65,8 @@ class ParkingBuildingGUI:
         # create a button for each slot add to list
         slot_button_list = []
         for slot in floor.get_floor_slots():
-            slot_button = tk.Button(tab, text=slot.get_slot_code(), command=lambda slot_code=slot.get_slot_code(): self.slot_window(slot_code))
+            slot_button = tk.Button(tab, text=slot.get_slot_code(),
+                                    command=lambda slot_code=slot.get_slot_code(): self.slot_window(slot_code))
             slot_button_list.append(slot_button)
 
         # use grid to place buttons in a table
@@ -70,6 +74,7 @@ class ParkingBuildingGUI:
             row = i // len(self.x_list)
             col = i % len(self.x_list)
             slot_button_list[i].grid(row=row, column=col)
+
     def slot_window(self, slot_code):
         # create a window for each slot
         slot_window = tk.Toplevel(self.window)
@@ -137,7 +142,6 @@ class ParkingBuildingGUI:
                                     text="Check Out",
                                     command=lambda: ms.checkout(slot_code))
         checkout_button.pack()
-
 
 
 if __name__ == "__main__":
