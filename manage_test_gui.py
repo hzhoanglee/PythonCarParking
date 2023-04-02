@@ -59,155 +59,10 @@ def my_time():
 
 
 # New window when a sidebar button is clicked
-def open_check_in(slot_code="Auto"):
-    # Creating the screen
-    new = ttk.CTkToplevel(root)
-    new.resizable(False, False)
-    new.title("Car Check In Window")
-    new.config(background=mainScreenColor)
-    x = root.winfo_x()
-    y = root.winfo_y()
-    new.geometry("+%d+%d" % (x + 300, y + 150))
-    new.geometry('500x450')
-
-    # form
-    label = ttk.CTkLabel(master=new,
-                         text="Car Check In",
-                         text_color=grayColor,
-                         font=('', 20, 'bold'),
-                         fg_color=mainScreenColor, ).place(x=100, y=90)
-
-    driverName = ttk.CTkEntry(master=new,
-                              width=300,
-                              height=40,
-                              placeholder_text='Driver Name',
-                              bg_color=mainScreenColor)
-    driverName.place(x=100, y=140)
-
-    licensePlate = ttk.CTkEntry(master=new,
-                                width=300,
-                                height=40,
-                                placeholder_text='License plate',
-                                bg_color=frameColor
-                                )
-    licensePlate.place(x=100, y=195)
-
-    # Getting slot codes
-    slot_codes = ['Auto']
-    lst = ms.get_unused_slots()
-    for slot in lst:
-        slot_codes.append(str(slot.get_slot_code()))
-
-    # Dropdown box
-    dropdown = ttk.CTkOptionMenu(master=new,
-                                 height=40,
-                                 values=slot_codes,
-                                 button_color=mainColor,
-                                 fg_color=mainColor,
-                                 button_hover_color=hoverColor,
-                                 dropdown_hover_color=hoverColor
-                                 )
-    dropdown.set(slot_code)
-    dropdown.place(x=100, y=250)
-
-    def submit():
-        # Check if all fields are filled out
-        if driverName.get() and licensePlate.get() and dropdown.get():
-            # Check if dropdown menu has a value selected
-            if dropdown.get() != "Auto":
-                # Add car
-                ms.checkin(driverName.get(), licensePlate.get(), dropdown.get())
-                # Show success message
-                mbox.showinfo("Success", "A car has been added.")
-                # Close the Toplevel window
-                new.destroy()
-            else:
-                # Show error message
-                mbox.showerror("Error", "Please select a parking slot.")
-        else:
-            # Show error message
-            mbox.showerror("Error", "Please input everything.")
-
-    # Submit button
-    submitButton = ttk.CTkButton(master=new,
-                                 height=40,
-                                 text="Add car",
-                                 fg_color=mainColor,
-                                 font=("", 15, 'bold'),
-                                 text_color='white',
-                                 cursor="hand2",
-                                 hover_color='#ccccff', command=lambda: submit())
-    submitButton.place(x=100, y=320)
-
-    # Keep the toplevel window in front of the root window
-    new.wm_transient(root)
-    new.mainloop()
 
 
-def open_check_out(slot_code):
-    # Creating the screen
-    new = ttk.CTkToplevel(root)
-    new.resizable(False, False)
-    new.title("Car Check Out Window")
-    new.config(background=mainScreenColor)
-    x = root.winfo_x()
-    y = root.winfo_y()
-    new.geometry("+%d+%d" % (x + 300, y + 150))
-    new.geometry('500x450')
 
-    # form
-    label = ttk.CTkLabel(master=new,
-                         text="Car Check Out",
-                         text_color=grayColor,
-                         font=('', 20, 'bold'),
-                         fg_color=mainScreenColor, ).place(x=100, y=90)
 
-    # Getting slot codes
-    slot_codes = [slot_code]
-    lst = ms.get_used_slots()
-    for slot in lst:
-        print(slot)
-        #slot_codes.append(str(slot.get_slot_code()))
-
-    # Dropdown box
-    dropdown = ttk.CTkOptionMenu(master=new,
-                                 height=40,
-                                 values=slot_codes,
-                                 button_color=mainColor,
-                                 fg_color=mainColor,
-                                 button_hover_color=hoverColor,
-                                 dropdown_hover_color=hoverColor
-                                 )
-    dropdown.set(slot_code)
-    dropdown.place(x=100, y=250)
-
-    def checkout_submit():
-        if dropdown.get():
-            if dropdown.get() != "Auto":
-                price = ms.checkout(dropdown.get())
-                check_out_text = "Check Out success. Total price: " + str(price)
-                mbox.showinfo("Success", check_out_text)
-                new.destroy()
-            else:
-                mbox.showerror("Error", "Please select a parking slot.")
-        else:
-            # Show error message
-            mbox.showerror("Error", "Please input everything.")
-
-    # Submit button
-    submitButton = ttk.CTkButton(master=new,
-                                 height=40,
-                                 text="Check Out",
-                                 fg_color=mainColor,
-                                 font=("", 15, 'bold'),
-                                 text_color='white',
-                                 cursor="hand2",
-                                 hover_color='#ccccff', command=lambda: checkout_submit())
-    submitButton.place(x=100, y=320)
-
-    # Keep the toplevel window in front of the root window
-    new.wm_transient(root)
-    new.mainloop()
 
 
 def open_manage():
@@ -389,32 +244,168 @@ class ParkingBuildingGUI:
     def slot_window(self, slot_code):
         slot = ms.get_slot_by_code(slot_code)
         if slot.is_available():
-            open_check_in(slot_code)
+            self.open_check_in(slot_code)
         else:
-            open_check_out(slot_code)
-        self.re_init()
-        self.main_section()
+            self.open_check_out(slot_code)
 
-    def re_init(self):
-        self.building_settings = ms.get_settings()
-        floor_count = int(self.building_settings.get_Z_VALUE())
-        self.building_floors = []
-        for i in range(floor_count):
-            floor_code = f"F{i}"
-            floor_slots = []
-            for slot in ms.get_slot_list():
-                if slot.get_slot_code().endswith(floor_code):
-                    floor_slots.append(slot)
-            self.building_floors.append(ParkingFloor(floor_code, floor_slots))
+    def destroy_screen(self):
+        root.destroy()
 
-        self.x_list = []
-        for i in range(int(self.building_settings.get_X_VALUE())):
-            chars = [chr(i + 65)]
-            self.x_list.append(chars)
+    def open_check_in(self, slot_code="Auto"):
+        # Creating the screen
+        new = ttk.CTkToplevel(root)
+        new.resizable(False, False)
+        new.title("Car Check In Window")
+        new.config(background=mainScreenColor)
+        x = root.winfo_x()
+        y = root.winfo_y()
+        new.geometry("+%d+%d" % (x + 300, y + 150))
+        new.geometry('500x450')
 
-        self.y_list = []
-        for i in range(int(self.building_settings.get_Y_VALUE())):
-            self.y_list.append(i)
+        # form
+        label = ttk.CTkLabel(master=new,
+                             text="Car Check In",
+                             text_color=grayColor,
+                             font=('', 20, 'bold'),
+                             fg_color=mainScreenColor, ).place(x=100, y=90)
+
+        driverName = ttk.CTkEntry(master=new,
+                                  width=300,
+                                  height=40,
+                                  placeholder_text='Driver Name',
+                                  bg_color=mainScreenColor)
+        driverName.place(x=100, y=140)
+
+        licensePlate = ttk.CTkEntry(master=new,
+                                    width=300,
+                                    height=40,
+                                    placeholder_text='License plate',
+                                    bg_color=frameColor
+                                    )
+        licensePlate.place(x=100, y=195)
+
+        # Getting slot codes
+        slot_codes = ['Auto']
+        lst = ms.get_unused_slots()
+        for slot in lst:
+            slot_codes.append(str(slot.get_slot_code()))
+
+        # Dropdown box
+        dropdown = ttk.CTkOptionMenu(master=new,
+                                     height=40,
+                                     values=slot_codes,
+                                     button_color=mainColor,
+                                     fg_color=mainColor,
+                                     button_hover_color=hoverColor,
+                                     dropdown_hover_color=hoverColor
+                                     )
+        dropdown.set(slot_code)
+        dropdown.place(x=100, y=250)
+
+        def submit():
+            # Check if all fields are filled out
+            if driverName.get() and licensePlate.get() and dropdown.get():
+                # Check if dropdown menu has a value selected
+                if dropdown.get() != "Auto":
+                    # Add car
+                    ms.checkin(driverName.get(), licensePlate.get(), dropdown.get())
+                    # Show success message
+                    mbox.showinfo("Success", "A car has been added.")
+                    # Close the Toplevel window
+                    self.main_section()
+                    new.destroy()
+                    # Reload the table
+
+                else:
+                    # Show error message
+                    mbox.showerror("Error", "Please select a parking slot.")
+            else:
+                # Show error message
+                mbox.showerror("Error", "Please input everything.")
+
+        # Submit button
+        submitButton = ttk.CTkButton(master=new,
+                                     height=40,
+                                     text="Add car",
+                                     fg_color=mainColor,
+                                     font=("", 15, 'bold'),
+                                     text_color='white',
+                                     cursor="hand2",
+                                     hover_color='#ccccff', command=lambda: submit())
+        submitButton.place(x=100, y=320)
+
+        # Keep the toplevel window in front of the root window
+        new.wm_transient(root)
+        new.mainloop()
+
+    def open_check_out(self, slot_code):
+        # Creating the screen
+        new = ttk.CTkToplevel(root)
+        new.resizable(False, False)
+        new.title("Car Check Out Window")
+        new.config(background=mainScreenColor)
+        x = root.winfo_x()
+        y = root.winfo_y()
+        new.geometry("+%d+%d" % (x + 300, y + 150))
+        new.geometry('500x450')
+
+        # form
+        label = ttk.CTkLabel(master=new,
+                             text="Car Check Out",
+                             text_color=grayColor,
+                             font=('', 20, 'bold'),
+                             fg_color=mainScreenColor, ).place(x=100, y=90)
+
+        # Getting slot codes
+        slot_codes = [slot_code]
+        lst = ms.get_used_slots()
+        for slot in lst:
+            print(slot)
+            # slot_codes.append(str(slot.get_slot_code()))
+
+        # Dropdown box
+        dropdown = ttk.CTkOptionMenu(master=new,
+                                     height=40,
+                                     values=slot_codes,
+                                     button_color=mainColor,
+                                     fg_color=mainColor,
+                                     button_hover_color=hoverColor,
+                                     dropdown_hover_color=hoverColor
+                                     )
+        dropdown.set(slot_code)
+        dropdown.place(x=100, y=250)
+
+        def checkout_submit():
+            if dropdown.get():
+                if dropdown.get() != "Auto":
+                    price = ms.checkout(dropdown.get())
+                    check_out_text = "Check Out success. Total price: " + str(price)
+                    mbox.showinfo("Success", check_out_text)
+                    self.main_section()
+                    new.destroy()
+                else:
+                    mbox.showerror("Error", "Please select a parking slot.")
+            else:
+                # Show error message
+                mbox.showerror("Error", "Please input everything.")
+
+        # Submit button
+        submitButton = ttk.CTkButton(master=new,
+                                     height=40,
+                                     text="Check Out",
+                                     fg_color=mainColor,
+                                     font=("", 15, 'bold'),
+                                     text_color='white',
+                                     cursor="hand2",
+                                     hover_color='#ccccff', command=lambda: checkout_submit())
+        submitButton.place(x=100, y=320)
+
+        # Keep the toplevel window in front of the root window
+        new.wm_transient(root)
+        new.mainloop()
+
+
+
 
 
 
@@ -492,7 +483,7 @@ carButton = ttk.CTkButton(master=sideBar,
                           cursor="hand2",
                           anchor='center',
                           hover_color='#ccccff',
-                          command=lambda: open_check_in(),
+                          command=lambda: gui.open_check_in(),
                           ).place(x=0, y=250)
 
 # Manage vehicle
