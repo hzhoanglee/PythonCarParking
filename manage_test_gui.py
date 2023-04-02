@@ -39,7 +39,7 @@ hoverColor = '#ccccff'
 
 # Setting the main window
 root = ttk.CTk()
-root.geometry('1020x700')
+root.geometry('970x700')
 root.resizable(True, True)
 root.title("Vịt Quay Parking System")
 root.config(background='#f2ecff')
@@ -249,12 +249,19 @@ class ParkingBuildingGUI:
         # Print main window in the right of sidebar
         main = ttk.CTkFrame(master=root, width=500,
                             height=1300)
-        main.place(x=220, y=100)
+        main.place(x=233, y=100)
+
+        # Customize the floor buttons
+        s = ttkz.Style()
+        s.theme_use('default')
+        s.configure('TNotebook.Tab',font =("clam", 12, "bold"), width=15, height=100, background="#E0E0E0")
+        s.map("TNotebook", background=[("selected", "pink")])
+
         tab_control = ttkz.Notebook(main)
         for floor in self.building_floors:
             tab = ttkz.Frame(tab_control)
             tab_control.add(tab, text=floor.get_floor_code())
-            tab_control.pack(expand=1, fill="both")
+            tab_control.pack(padx=5, pady=10, expand=10, fill="both")
             self.floor_window(tab, floor)
 
     def floor_window(self, tab, floor):
@@ -339,7 +346,7 @@ logout_text = ttk.CTkButton(header,
                             cursor='hand2',
                             text_color=mainColor,
                             hover_color='#ccccff')
-logout_text.place(x=450, y=15)
+logout_text.place(x=588, y=15)
 
 # ====================================
 # =============END OF HEADER==========
