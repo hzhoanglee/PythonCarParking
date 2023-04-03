@@ -23,15 +23,16 @@ class ManagementSystem:
         time_diff = self.io_car.checkout_car(slot_code)
         print("Time diff: ", time_diff)
 
-        if time_diff < 7:
-            print("You have to pay 2000 vnd")
-            return 2000
-        elif time_diff < 18:
-            print("You have to pay 3000 vnd")
-            return 3000
+        if time_diff < 24:
+            parking_fee = int(self.io_car.get_parking_fee())
         else:
-            print("You have to pay 5000 vnd")
-            return 5000
+            parking_time = (time_diff / 24)
+            if parking_time > int(parking_time):
+                parking_fee = (int(parking_time)+1) * int(self.io_car.get_parking_fee())
+            else:
+                parking_fee = int(parking_time) * int(self.io_car.get_parking_fee())
+
+        return parking_fee
 
     def edit_settings(self, X_VALUE, Y_VALUE, Z_VALUE, name, password):
         return self.io_car.edit_settings(X_VALUE, Y_VALUE, Z_VALUE, name, password)

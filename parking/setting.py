@@ -1,10 +1,11 @@
 class Settings:
-    def __init__(self, X_VALUE, Y_VALUE, Z_VALUE, name, password):
+    def __init__(self, X_VALUE, Y_VALUE, Z_VALUE, name, password, parking_fee):
         self.__X_VALUE = X_VALUE
         self.__Y_VALUE = Y_VALUE
         self.__Z_VALUE = Z_VALUE
         self.__name = name
         self.__password = password
+        self.__parking_fee = parking_fee
 
     def get_X_VALUE(self):
         return self.__X_VALUE
@@ -21,6 +22,9 @@ class Settings:
     def get_password(self):
         return self.__password
 
+    def get_parking_fee(self):
+        return self.__parking_fee
+
     #setters
     def set_X_VALUE(self, X_VALUE):
         self.__X_VALUE = X_VALUE
@@ -36,3 +40,6 @@ class Settings:
 
     def set_password(self, password):
         self.__password = password
+
+    def set_parking_fee(self, parking_fee):
+        self.__parking_fee = parking_fee

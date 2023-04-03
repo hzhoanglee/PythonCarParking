@@ -11,7 +11,8 @@ class IOfuncs:
                                  settings_fetch[1]['conf_value'],
                                  settings_fetch[2]['conf_value'],
                                  settings_fetch[3]['conf_value'],
-                                 settings_fetch[4]['conf_value'])
+                                 settings_fetch[4]['conf_value'],
+                                 settings_fetch[5]['conf_value'])
         self.slot_list = slot_list
     #==================================================================================================================
     #Input
@@ -119,6 +120,9 @@ class IOfuncs:
     def get_max_slots_count(self):
         max_slots_count = int(self.settings.get_X_VALUE()) * int(self.settings.get_Y_VALUE()) * int(self.settings.get_Z_VALUE())
         return max_slots_count
+
+    def get_parking_fee(self):
+        return self.settings.get_parking_fee()
 
     def get_history(self):
         history = fetch_history_db()

@@ -92,7 +92,7 @@ def update_check_ins_db(slot_id, driver_name, license_plate):
 
 def check_out_db(slot_code):
     #get the time diff from the db sql
-    utils.connect.dbconnection.execute("SELECT TIMEDIFF(NOW(), checkin_time) AS timediff FROM check_ins WHERE slot_code = %s",
+    utils.connect.dbconnection.execute("SELECT TIMEDIFF(NOW(), checkin_time) AS timediff FROM check_ins WHERE slot_code = %s AND status = 1",
                          (slot_code,))
     timediff = utils.connect.dbconnection.fetchall()
     datetime_diff_str = str(timediff[0]["timediff"])
@@ -102,8 +102,13 @@ def check_out_db(slot_code):
         hours = datetime_diff.second
         hours = hours / 3600
     except ValueError:
-        datetime_diff = datetime.datetime.strptime(datetime_diff_str, "%d days, %H:%M:%S")
-        hours = datetime_diff.day * 24 + datetime_diff.hour
+        try:
+            datetime_diff = datetime.datetime.strptime(datetime_diff_str, "%d days, %H:%M:%S")
+            hours = datetime_diff.day * 24 + datetime_diff.hour
+        except ValueError:
+            datetime_diff = datetime.datetime.strptime(datetime_diff_str, "%d day, %H:%M:%S")
+            hours = datetime_diff.day * 24 + datetime_diff.hour
+
 
     #update the checkout time and status
     utils.connect.dbconnection.execute("UPDATE check_ins SET checkout_time = NOW(), status = 0 WHERE slot_code = %s AND status = 1", (slot_code,))
