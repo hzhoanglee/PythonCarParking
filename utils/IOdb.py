@@ -61,27 +61,49 @@ def fetch_info_from_slot(slot_code):
     return car_info
 
 #=======================================================================================================================
-def update_settings_db(X_VALUE, Y_VALUE, Z_VALUE, name, password):
-    utils.connect.update_settings(X_VALUE, Y_VALUE, Z_VALUE, name, password)
 
 def update_settings_name(name):
-    utils.connect.dbconnection.execute("UPDATE settings SET name = %s", (name,))
+    if name == "" or name is None:
+        return -1
+    utils.connect.dbconnection.execute("UPDATE settings SET conf_value = %s WHERE conf_key = 'name'", (name,))
     utils.connect.mydb.commit()
 
 def update_settings_password(password):
-    utils.connect.dbconnection.execute("UPDATE settings SET password = %s", (password,))
+    if password == "" or password is None:
+        return -1
+    utils.connect.dbconnection.execute("UPDATE settings SET conf_value = %s WHERE conf_key = 'password'", (password,))
     utils.connect.mydb.commit()
 
 def update_settings_X_VALUE(X_VALUE):
-    utils.connect.dbconnection.execute("UPDATE settings SET X_VALUE = %s", (X_VALUE,))
+    if str(X_VALUE) == "" or X_VALUE is None:
+        return -1
+    elif int(X_VALUE) < 1:
+        return -1
+    utils.connect.dbconnection.execute("UPDATE settings SET conf_value = %s WHERE conf_key = 'X_VALUE'", (X_VALUE,))
     utils.connect.mydb.commit()
 
 def update_settings_Y_VALUE(Y_VALUE):
-    utils.connect.dbconnection.execute("UPDATE settings SET Y_VALUE = %s", (Y_VALUE,))
+    if str(Y_VALUE) == "" or Y_VALUE is None:
+        return -1
+    elif int(Y_VALUE) < 1:
+        return -1
+    utils.connect.dbconnection.execute("UPDATE settings SET conf_value = %s WHERE conf_key = 'Y_VALUE'", (Y_VALUE,))
     utils.connect.mydb.commit()
 
 def update_settings_Z_VALUE(Z_VALUE):
-    utils.connect.dbconnection.execute("UPDATE settings SET Z_VALUE = %s", (Z_VALUE,))
+    if str(Z_VALUE) == "" or Z_VALUE is None:
+        return -1
+    elif int(Z_VALUE) < 1:
+        return -1
+    utils.connect.dbconnection.execute("UPDATE settings SET conf_value = %s WHERE conf_key = 'Z_VALUE'", (Z_VALUE,))
+    utils.connect.mydb.commit()
+
+def update_settings_parking_fee(parking_fee):
+    if str(parking_fee) == "" or parking_fee is None:
+        return -1
+    elif int(parking_fee) < 1:
+        return -1
+    utils.connect.dbconnection.execute("UPDATE settings SET conf_value = %s WHERE conf_key = 'parking_fee'", (parking_fee,))
     utils.connect.mydb.commit()
 
 def update_check_ins_db(slot_id, driver_name, license_plate):

@@ -34,8 +34,8 @@ class ManagementSystem:
 
         return parking_fee
 
-    def edit_settings(self, X_VALUE, Y_VALUE, Z_VALUE, name, password):
-        return self.io_car.edit_settings(X_VALUE, Y_VALUE, Z_VALUE, name, password)
+    def edit_settings(self, X_VALUE, Y_VALUE, Z_VALUE, password, parking_fee):
+        return self.io_car.edit_settings(X_VALUE, Y_VALUE, Z_VALUE, password, parking_fee)
 
     #==================================================================================================================
     def get_slot_list(self):

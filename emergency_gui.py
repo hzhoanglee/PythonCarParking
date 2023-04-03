@@ -197,11 +197,12 @@ class ParkingBuildingGUI:
         #tk_window.destroy()
 
 class Dashboard:
-    def __init__(self, ms):
-        self.ms = ms
+    def __init__(self):
+        self.ms = ManagementSystem()
+        self.ms.setup_parking_lot()
         self.dashboard_window = tk.Tk()
         self.ParkingBuildingGUI = ParkingBuildingGUI(self.dashboard_window, self.ms)
-        self.dashboard_window.title("Dashboard")
+        self.dashboard_window.title("Parking System (Emergency GUI)")
         # dashboard window must bigger than ParkingBuildingGUI
         self.dashboard_window.geometry("1000x800")
         self.dashboard_window.resizable(True, True)
@@ -245,28 +246,111 @@ class Dashboard:
         general_info_label.pack()
 
 
+        #tab3 setting tab(show, edit setting)
         tab3 = ttk.Frame(tab_control)
-        tab_control.add(tab3, text="About")
+        tab_control.add(tab3, text="Settings")
         tab_control.pack(expand=1, fill="both")
-        #add some line of text to tab3
-        # Developer: Le Tuan Huy(LTH3ar)
-        # Contact: huylt.bi12-195@st.usth.edu.vn
-        # This GUI is a emergency GUI for the parking building
-        # It is not a final version, it is just a prototype
+        #get settings
+        settings = self.ms.get_settings()
+        #Show current settings
+        current_settings_label = tk.Label(tab3, text="Current Settings: ")
+        current_settings_label.pack()
+        #using label to show text
+        current_x_val = tk.Label(tab3, text="x_val: " + str(settings.get_X_VALUE()))
+        current_x_val.pack()
+        current_y_val = tk.Label(tab3, text="y_val: " + str(settings.get_Y_VALUE()))
+        current_y_val.pack()
+        current_z_val = tk.Label(tab3, text="z_val: " + str(settings.get_Z_VALUE()))
+        current_z_val.pack()
+        current_parking_fee = tk.Label(tab3, text="parking_fee: " + str(settings.get_parking_fee()))
+        current_parking_fee.pack()
+
+        #Edit settings
+        divider = tk.Label(tab3, text="----------------------------------------")
+        divider.pack()
+        edit_settings_label = tk.Label(tab3, text="Edit Settings: ")
+        edit_settings_label.pack()
+        #using label to show text
+        x_val_label = tk.Label(tab3, text="x_val: ")
+        x_val_label.pack()
+        x_val_entry = tk.Entry(tab3)
+        x_val_entry.pack()
+        y_val_label = tk.Label(tab3, text="y_val: ")
+        y_val_label.pack()
+        y_val_entry = tk.Entry(tab3)
+        y_val_entry.pack()
+        z_val_label = tk.Label(tab3, text="z_val: ")
+        z_val_label.pack()
+        z_val_entry = tk.Entry(tab3)
+        z_val_entry.pack()
+        parking_fee_label = tk.Label(tab3, text="parking_fee: ")
+        parking_fee_label.pack()
+        parking_fee_entry = tk.Entry(tab3)
+        parking_fee_entry.pack()
+        password_label = tk.Label(tab3, text="password: ")
+        password_label.pack()
+        password_entry = tk.Entry(tab3)
+        password_entry.pack()
+        #using button to upload settings
+        upload_button = tk.Button(tab3, text="Upload", command=lambda: self.upload_settings(x_val_entry,
+                                                                                            y_val_entry,
+                                                                                            z_val_entry,
+                                                                                            password_entry,
+                                                                                            parking_fee_entry))
+
+        upload_button.pack()
+
+
+
+        tab4 = ttk.Frame(tab_control)
+        tab_control.add(tab4, text="About")
+        tab_control.pack(expand=1, fill="both")
 
         #using label to show text
-        about_label = tk.Label(tab3, text="Developer: Le Tuan Huy(LTH3ar)"
-                                          "\nContact: huylt.bi12-195@st.usth.edu.vn"
-                                            "\nThis GUI is an emergency GUI for the parking system"
-                                            "\nIt is not a final version, it is just a prototype")
-        about_label.pack()
+        about_label_devs = tk.Label(tab4, text="Developer: Le Tuan Huy(bi12-195) "
+                                          "\nNguyen Minh Hoang(bi12-172)" 
+                                          "\nLe Minh Hoang(bi12-167)" 
+                                          "\nNguyen The Hoang(bi12-171)"
+                                          "\nNguyen Vu Viet Hoang(bi12-173)")
+        about_label_devs.pack()
 
+        divider = tk.Label(tab4, text="----------------------------------------")
+        divider.pack()
+
+        about_label_contact = tk.Label(tab4, text="Contact:huylt.bi12-195@st.usth.edu.vn"
+                                                  "\nhoangnm.bi12-172@st.usth.edu.vn"
+                                                  "\nhoanglm.bi12-167@st.usth.edu.vn"
+                                                  "\nhoangnt.bi12-171@st.usth.edu.vn"
+                                                  "\nhoangnvv.bi12-173@st.usth.edu.vn")
+        about_label_contact.pack()
+
+        divider = tk.Label(tab4, text="----------------------------------------")
+        divider.pack()
+
+        about_label_description = tk.Label(tab4, text="This GUI is a emergency GUI for the parking building"
+                                                        "\nIntended to be used in case of the main GUI is not working"
+                                                      "\nor the main GUI resources is not available")
+        about_label_description.pack()
 
         self.dashboard_window.mainloop()
 
+    def upload_settings(self, x_val_ent, y_val_ent, z_val_ent, password_ent, parking_fee_ent):
+        x_val = x_val_ent.get()
+        y_val = y_val_ent.get()
+        z_val = z_val_ent.get()
+        password = password_ent.get()
+        parking_fee = parking_fee_ent.get()
+        self.ms.edit_settings(x_val, y_val, z_val, password, parking_fee)
+        x_val_ent.delete(0, 'end')
+        y_val_ent.delete(0, 'end')
+        z_val_ent.delete(0, 'end')
+        password_ent.delete(0, 'end')
+        parking_fee_ent.delete(0, 'end')
+        self.refresh()
+
     def refresh(self):
         self.dashboard_window.destroy()
-        self.__init__(self.ms)
+        self.__init__()
         self.main_window()
 
 class LoginWindow:
@@ -297,9 +381,7 @@ class LoginWindow:
         if self.lg.verify_password(password):
             password_entry.delete(0, tk.END)
             self.login_window.destroy()
-            ms = ManagementSystem()
-            ms.setup_parking_lot()
-            d = Dashboard(ms)
+            d = Dashboard()
             d.main_window()
         else:
             lbl = tk.Label(self.login_window, text="Wrong password")

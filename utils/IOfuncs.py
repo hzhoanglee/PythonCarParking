@@ -71,13 +71,17 @@ class IOfuncs:
                 return datetime_diff
 
     #edit settings
-    def edit_settings(self, X_VALUE, Y_VALUE, Z_VALUE, name, password):
+    def edit_settings(self, X_VALUE, Y_VALUE, Z_VALUE, password, parking_fee):
         self.settings.set_X_VALUE(X_VALUE)
         self.settings.set_Y_VALUE(Y_VALUE)
         self.settings.set_Z_VALUE(Z_VALUE)
-        self.settings.set_name(name)
         self.settings.set_password(password)
-        update_settings_db(X_VALUE, Y_VALUE, Z_VALUE, name, password)
+        self.settings.set_parking_fee(parking_fee)
+        update_settings_X_VALUE(X_VALUE)
+        update_settings_Y_VALUE(Y_VALUE)
+        update_settings_Z_VALUE(Z_VALUE)
+        update_settings_password(password)
+        update_settings_parking_fee(parking_fee)
         return self.settings
     #==================================================================================================================
 
