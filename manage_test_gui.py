@@ -485,7 +485,7 @@ class Builder:
     def open_manage(self):
         # Creating the screen
         new = ttk.CTkToplevel(self.root)
-        new.resizable(False, False)
+        new.resizable(False, True)
         new.title("Manage Car Window")
         new.config(background=self.mainScreenColor)
         new.geometry('600x520')
