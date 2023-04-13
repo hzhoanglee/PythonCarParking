@@ -588,11 +588,11 @@ class Builder:
     def run(self):
         self.build()
         self.my_time()
+        gui.main_section()
         self.root.mainloop()
 
 
 if __name__ == '__main__':
     template = Builder()
     gui = ParkingBuildingGUI()
-    gui.main_section()
     template.login_screen()
