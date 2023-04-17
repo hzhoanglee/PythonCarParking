@@ -2,7 +2,6 @@ from parking.car import Car
 from parking.slot import Slot
 from parking.setting import Settings
 from utils.IOdb import *
-import bcrypt
 
 class IOfuncs:
     def __init__(self, slot_list):
@@ -69,6 +68,10 @@ class IOfuncs:
                 slot.check_out()
                 datetime_diff = check_out_db(slot_code)
                 return datetime_diff
+    def update_history_fee(self, slot_code, fee):
+        update_history_fee_db(slot_code, fee)
+
+
 
     #edit settings
     def edit_settings(self, X_VALUE, Y_VALUE, Z_VALUE, password, parking_fee):
@@ -131,4 +134,11 @@ class IOfuncs:
     def get_history(self):
         history = fetch_history_db()
         return history
+
+    def get_history_details(self, index, history_lst):
+        for history in history_lst:
+            if index == history['id']:
+                details = history
+                return details
+        return False
 
