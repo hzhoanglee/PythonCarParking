@@ -9,10 +9,6 @@ from tkinter import messagebox as mbox
 from utils.connect import mydb
 from login_verification import LoginVerification
 
-ms = ManagementSystem()
-ms.setup_parking_lot()
-
-
 class ParkingFloor:
     def __init__(self, floor_code, floor_slots):
         self.floor_code = floor_code
@@ -32,8 +28,9 @@ class ParkingFloor:
 
 
 class ParkingBuildingGUI:
-    def __init__(self):
-        self.building_settings = ms.get_settings()
+    def __init__(self, ms):
+        self.ms = ms
+        self.building_settings = self.ms.get_settings()
         floor_count = int(self.building_settings.get_Z_VALUE())
         self.building_floors = []
         for i in range(floor_count):
@@ -100,7 +97,7 @@ class ParkingBuildingGUI:
             slot_button_list[i].grid(padx=10, pady=10)
 
     def slot_window(self, slot_code):
-        slot = ms.get_slot_by_code(slot_code)
+        slot = self.ms.get_slot_by_code(slot_code)
         if slot.is_available():
             self.open_check_in(slot_code)
         else:
@@ -141,7 +138,7 @@ class ParkingBuildingGUI:
 
         # Getting slot codes
         slot_codes = ['Auto']
-        lst = ms.get_unused_slots()
+        lst = self.ms.get_unused_slots()
         for slot in lst:
             slot_codes.append(str(slot.get_slot_code()))
 
@@ -163,7 +160,7 @@ class ParkingBuildingGUI:
                 # Check if dropdown menu has a value selected
                 if dropdown.get() != "Auto":
                     # Add car
-                    ms.checkin(driverName.get(), licensePlate.get(), dropdown.get())
+                    self.ms.checkin(driverName.get(), licensePlate.get(), dropdown.get())
                     # Show success message
                     mbox.showinfo("Success", "A car has been added.")
                     # Close the Toplevel window
@@ -212,7 +209,7 @@ class ParkingBuildingGUI:
                              fg_color=template.mainScreenColor, ).place(x=100, y=90)
 
         # Get Car info
-        slot = ms.get_slot_by_code(slot_code)
+        slot = self.ms.get_slot_by_code(slot_code)
         car = slot.get_car()
         driverName = car.get_driver_name()
         licensePlate = car.get_license_plate()
@@ -247,7 +244,7 @@ class ParkingBuildingGUI:
         def checkout_submit():
             if dropdown.get():
                 if dropdown.get() != "Auto":
-                    price = ms.checkout(dropdown.get())
+                    price = self.ms.checkout(dropdown.get())
                     check_out_text = "Check Out success. Total price: " + str(price)
                     mbox.showinfo("Success", check_out_text)
                     self.main_section()
@@ -275,8 +272,9 @@ class ParkingBuildingGUI:
 
 
 class Builder:
-    def __init__(self):
+    def __init__(self, ms):
         self.root = None
+        self.ms = ms
         # Setting the theme for the main window
         self.manageButton = None
         self.logout_text = None
@@ -559,7 +557,7 @@ class Builder:
 
         # Real-time counter
         # Used slot
-        used_slot = ms.get_used_slot_count()
+        used_slot = self.ms.get_used_slot_count()
         lab1 = Label(new, font=("#6f727a", 14, "bold"), width=15,
                      height=2,
                      text="Occupied slots : ")
@@ -571,7 +569,7 @@ class Builder:
         lab2.place(x=250, y=670)
 
         # Available slots
-        avail_slot = ms.get_available_slot_count()
+        avail_slot = self.ms.get_available_slot_count()
         lab3 = Label(new, font=("#6f727a", 14, "bold"), width=15,
                      height=2,
                      text="Available slots : ")
@@ -586,13 +584,16 @@ class Builder:
         new.mainloop()
 
     def run(self):
+        self.ms.setup_parking_lot()
         self.build()
         self.my_time()
+        gui = ParkingBuildingGUI(self.ms)
         gui.main_section()
         self.root.mainloop()
 
 
 if __name__ == '__main__':
-    template = Builder()
-    gui = ParkingBuildingGUI()
+    ms = ManagementSystem()
+    template = Builder(ms)
+
     template.login_screen()
