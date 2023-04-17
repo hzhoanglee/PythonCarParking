@@ -275,7 +275,6 @@ class Builder:
     def __init__(self, ms):
         self.root = None
         self.ms = ms
-
         # Setting the theme for the main window
         self.manageButton = None
         self.logout_text = None
@@ -315,8 +314,8 @@ class Builder:
     def login_screen(self):
         # Creating the screen
         self.login_window = ttk.CTk()
-        self.login_window.geometry('970x700')
-        self.login_window.resizable(True, True)
+        self.login_window.geometry('500x300')
+        self.login_window.resizable(False, False)
         self.login_window.title("Vịt Quay Parking System")
         self.login_window.config(background='#f2ecff')
 
@@ -325,14 +324,14 @@ class Builder:
                                text="Vịt Quay Parking System",
                                text_color=self.grayColor,
                                font=('', 30, 'bold'),
-                               fg_color=self.mainScreenColor, ).place(x=250, y=90)
+                               fg_color=self.mainScreenColor, ).place(x=80, y=50)
 
         # Password label
         passwordLabel = ttk.CTkLabel(master=self.login_window,
                                      text="Password",
                                      text_color=self.grayColor,
                                      font=('', 15, 'bold'),
-                                     fg_color=self.mainScreenColor, ).place(x=250, y=280)
+                                     fg_color=self.mainScreenColor, ).place(x=120, y=130)
 
         # Password entry
         passwordEntry = ttk.CTkEntry(master=self.login_window,
@@ -341,7 +340,7 @@ class Builder:
                                      font=('', 15, 'bold'),
                                      border_color=self.mainColor,
                                      show="*")
-        passwordEntry.place(x=250, y=310)
+        passwordEntry.place(x=120, y=160)
 
         # Login button
         loginButton = ttk.CTkButton(master=self.login_window,
@@ -352,7 +351,7 @@ class Builder:
                                     text_color='white',
                                     cursor="hand2",
                                     hover_color='#ccccff', command=lambda: self.check_login(passwordEntry.get()))
-        loginButton.place(x=250, y=380)
+        loginButton.place(x=120, y=200)
 
         # Keep the toplevel window in front of the root window
         self.login_window.mainloop()
@@ -431,7 +430,7 @@ class Builder:
                                        cursor="hand2",
                                        anchor='center',
                                        hover_color='#ccccff',
-                                       command=lambda: self.gui.open_check_in(),
+                                       command=lambda: gui.open_check_in(),
                                        ).place(x=0, y=250)
 
         # Manage vehicle
@@ -588,8 +587,8 @@ class Builder:
         self.ms.setup_parking_lot()
         self.build()
         self.my_time()
-        self.gui = ParkingBuildingGUI(self.ms)
-        self.gui.main_section()
+        gui = ParkingBuildingGUI(self.ms)
+        gui.main_section()
         self.root.mainloop()
 
 
