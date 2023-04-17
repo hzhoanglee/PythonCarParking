@@ -431,7 +431,7 @@ class Builder:
                                        cursor="hand2",
                                        anchor='center',
                                        hover_color='#ccccff',
-                                       command=lambda: gui.open_check_in(),
+                                       command=lambda: self.open_check_in(),
                                        ).place(x=0, y=250)
 
         # Manage vehicle
