@@ -133,12 +133,16 @@ def check_out_db(slot_code):
 
 
     #update the checkout time and status
-    utils.connect.dbconnection.execute("UPDATE check_ins SET checkout_time = NOW(), status = 0 WHERE slot_code = %s AND status = 1", (slot_code,))
-    utils.connect.mydb.commit()
+    #utils.connect.dbconnection.execute("UPDATE check_ins SET checkout_time = NOW(), status = 0 WHERE slot_code = %s AND status = 1", (slot_code,))
+    #utils.connect.mydb.commit()
     #convert the time diff to hours(int)
     #datetime_diff = timediff[0]["timediff"]
     print(datetime_diff)
     print(hours)
     return hours
 
+def update_history_fee_db(slot_code, fee):
+    #update parking fee in history table after checkout from check_ins make sure that the date is the closest one
+    utils.connect.dbconnection.execute("UPDATE check_ins SET checkout_time = NOW(), status = 0, checkout_fee = %s WHERE slot_code = %s AND status = 1", (fee, slot_code,))
+    utils.connect.mydb.commit()
 #=======================================================================================================================

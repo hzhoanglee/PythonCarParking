@@ -213,6 +213,8 @@ class Dashboard:
         #2. is the about and help content, contact us (N/a)
 
         tab_control = ttk.Notebook(self.dashboard_window)
+
+        #tab1: parking building tab
         tab1 = ttk.Frame(tab_control)
         tab_control.add(tab1, text="Parking Building")
         tab_control.pack(expand=1, fill="both")
@@ -228,7 +230,7 @@ class Dashboard:
         refresh_button = tk.Button(tab1, text="Refresh", command=self.refresh)
         refresh_button.pack()
 
-
+        #tab2: general info tab
         tab2 = ttk.Frame(tab_control)
         tab_control.add(tab2, text="General Info")
         tab_control.pack(expand=1, fill="both")
@@ -246,7 +248,7 @@ class Dashboard:
         general_info_label.pack()
 
 
-        #tab3 setting tab(show, edit setting)
+        #tab3: setting tab(show, edit setting)
         tab3 = ttk.Frame(tab_control)
         tab_control.add(tab3, text="Settings")
         tab_control.pack(expand=1, fill="both")
@@ -302,32 +304,70 @@ class Dashboard:
 
 
 
+        #tab4: History tab
         tab4 = ttk.Frame(tab_control)
-        tab_control.add(tab4, text="About")
+        tab_control.add(tab4, text="History")
+        tab_control.pack(expand=1, fill="both")
+        #get history
+        history = self.ms.get_history()
+        #scrollbar x
+        scrollbar_x = tk.Scrollbar(tab4, orient=tk.HORIZONTAL)
+        scrollbar_x.pack(side=tk.BOTTOM, fill=tk.X)
+        #scrollbar y
+        scrollbar_y = tk.Scrollbar(tab4, orient=tk.VERTICAL)
+        scrollbar_y.pack(side=tk.RIGHT, fill=tk.Y)
+        #using listbox to show history
+        history_listbox = tk.Listbox(tab4, xscrollcommand=scrollbar_x.set, yscrollcommand=scrollbar_y.set)
+        history_listbox.pack()
+        #add history to listbox
+        for h in history:
+            history_listbox.insert(tk.END, h)
+        #config scrollbar
+        scrollbar_x.config(command=history_listbox.xview)
+        scrollbar_y.config(command=history_listbox.yview)
+        #config listbox size
+        history_listbox.config(width=100, height=20)
+        #add second listbox to show detail of history using select highlight
+        history_detail_listbox = tk.Listbox(tab4, xscrollcommand=scrollbar_x.set, yscrollcommand=scrollbar_y.set)
+        history_detail_listbox.pack()
+        #config scrollbar
+        scrollbar_x.config(command=history_detail_listbox.xview)
+        scrollbar_y.config(command=history_detail_listbox.yview)
+        #config listbox size
+        history_detail_listbox.config(width=100, height=20)
+        #using select highlight to show detail of history
+        history_listbox.bind("<<ListboxSelect>>", lambda event: self.show_history_detail(history_listbox, history_detail_listbox, history))
+
+
+
+
+        #tab5: about
+        tab5 = ttk.Frame(tab_control)
+        tab_control.add(tab5, text="About")
         tab_control.pack(expand=1, fill="both")
 
         #using label to show text
-        about_label_devs = tk.Label(tab4, text="Developer: Le Tuan Huy(bi12-195) "
+        about_label_devs = tk.Label(tab5, text="Developer: Le Tuan Huy(bi12-195) "
                                           "\nNguyen Minh Hoang(bi12-172)" 
                                           "\nLe Minh Hoang(bi12-167)" 
                                           "\nNguyen The Hoang(bi12-171)"
                                           "\nNguyen Vu Viet Hoang(bi12-173)")
         about_label_devs.pack()
 
-        divider = tk.Label(tab4, text="----------------------------------------")
+        divider = tk.Label(tab5, text="----------------------------------------")
         divider.pack()
 
-        about_label_contact = tk.Label(tab4, text="Contact:huylt.bi12-195@st.usth.edu.vn"
+        about_label_contact = tk.Label(tab5, text="Contact:huylt.bi12-195@st.usth.edu.vn"
                                                   "\nhoangnm.bi12-172@st.usth.edu.vn"
                                                   "\nhoanglm.bi12-167@st.usth.edu.vn"
                                                   "\nhoangnt.bi12-171@st.usth.edu.vn"
                                                   "\nhoangnvv.bi12-173@st.usth.edu.vn")
         about_label_contact.pack()
 
-        divider = tk.Label(tab4, text="----------------------------------------")
+        divider = tk.Label(tab5, text="----------------------------------------")
         divider.pack()
 
-        about_label_description = tk.Label(tab4, text="This GUI is a emergency GUI for the parking building"
+        about_label_description = tk.Label(tab5, text="This GUI is a emergency GUI for the parking building"
                                                         "\nIntended to be used in case of the main GUI is not working"
                                                       "\nor the main GUI resources is not available")
         about_label_description.pack()
@@ -347,6 +387,22 @@ class Dashboard:
         password_ent.delete(0, 'end')
         parking_fee_ent.delete(0, 'end')
         self.refresh()
+
+    def show_history_detail(self, history_listbox, history_detail_listbox, history_lst):
+        history_detail_listbox.delete(0, 'end')
+        history_detail = history_lst[history_listbox.curselection()[0]]
+        print(history_detail)
+        #add dict(id, car_license_plate, car_driver_name, check_in_time, check_out_time, parking_fee, status, slot_code) to listbox
+        history_detail_listbox.insert(tk.END, "ID: " + str(history_detail['id']))
+        history_detail_listbox.insert(tk.END, "Car license plate: " + str(history_detail['car_license_plate']))
+        history_detail_listbox.insert(tk.END, "Car driver name: " + str(history_detail['car_driver_name']))
+        history_detail_listbox.insert(tk.END, "Check in time: " + str(history_detail['checkin_time']))
+        history_detail_listbox.insert(tk.END, "Check out time: " + str(history_detail['checkout_time']))
+        history_detail_listbox.insert(tk.END, "Parking fee: " + str(history_detail['checkout_fee']))
+        history_detail_listbox.insert(tk.END, "Status: " + str(history_detail['status']))
+        history_detail_listbox.insert(tk.END, "Slot code: " + str(history_detail['slot_code']))
+
+
 
     def refresh(self):
         self.dashboard_window.destroy()

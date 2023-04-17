@@ -32,6 +32,7 @@ class ManagementSystem:
             else:
                 parking_fee = int(parking_time) * int(self.io_car.get_parking_fee())
 
+        self.io_car.update_history_fee(slot_code, parking_fee)
         return parking_fee
 
     def edit_settings(self, X_VALUE, Y_VALUE, Z_VALUE, password, parking_fee):
@@ -74,6 +75,7 @@ class ManagementSystem:
                 return slot
     def get_history(self):
         return self.io_car.get_history()
-    #def get_used_slot(self):
-    #    self.get_used_slot()
+
+    def get_history_details(self, index, history_lst):
+        return self.io_car.get_history_details(index, history_lst)
 
