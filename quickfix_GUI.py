@@ -9,6 +9,7 @@ from tkinter import messagebox as mbox
 from utils.connect import mydb
 from login_verification import LoginVerification
 
+
 class ParkingFloor:
     def __init__(self, floor_code, floor_slots):
         self.floor_code = floor_code
