@@ -607,105 +607,112 @@ class Builder:
 
     def open_settings(self):
         # Creating the screen
-        new = ttk.CTkToplevel(self.root)
+        new = ttk.CTkToplevel(template.root)
         new.resizable(True, True)
         new.title("Settings")
-        new.config(background=self.mainScreenColor)
-        new.geometry('400x400')
+        new.config(background=template.mainScreenColor)
+        x = template.root.winfo_x()
+        y = template.root.winfo_y()
+        new.geometry('800x600')
 
         # Get settings
         settings = self.ms.get_settings()
-        # Show current settings
-        current_settings_label = tk.Label(new, text="Current Settings ",
-                                          font=('', 15, 'bold'),
-                                          foreground=self.grayColor)
-        current_settings_label.place(x=30, y=80)
 
         # Using label to show text
-        current_x_val = tk.Label(new, text="X value             " + str(settings.get_X_VALUE()),
-                                 font=('', 15, 'bold'),
-                                 foreground=self.mainColor)
-        current_x_val.place(x=300, y=40)
-        current_y_val = tk.Label(new, text="Y value             " + str(settings.get_Y_VALUE()), font=('', 15, 'bold'),
-                                 foreground=self.mainColor)
-        current_y_val.place(x=300, y=80)
-        current_z_val = tk.Label(new, text="Z value             " + str(settings.get_Z_VALUE()), font=('', 15, 'bold'),
-                                 foreground=self.mainColor)
-        current_z_val.place(x=300, y=120)
-        current_parking_fee = tk.Label(new, text="Parking fee   " + str(settings.get_parking_fee()),
-                                       font=('', 15, 'bold'), foreground=self.mainColor)
-        current_parking_fee.place(x=300, y=160)
+        label = ttk.CTkLabel(master=new,
+                             text="System Settings",
+                             text_color=template.grayColor,
+                             font=('', 20, 'bold'),
+                             fg_color=template.mainScreenColor).place(x=100, y=40)
 
-        # Edit settings
-        divider = tk.Label(new, text="-------------------------------------------------------------",
-                           font=('', 18, 'bold'), foreground=self.mainColor)
-        divider.place(x=50, y=220)
-        edit_settings_label = tk.Label(new, text="Edit Settings ", font=('', 15, 'bold'), foreground=self.grayColor)
-        edit_settings_label.place(x=30, y=310)
+        label_x = ttk.CTkLabel(master=new,
+                               text="X value:",
+                               text_color=template.grayColor,
+                               font=('', 18),
+                               fg_color=template.mainScreenColor)
+        label_x.place(x=100, y=150)
+        x_val_change = ttk.CTkEntry(master=new,
+                                    width=300,
+                                    height=40,
+                                    placeholder_text='Value for X',
+                                    bg_color=template.mainScreenColor)
+        x_val_change.place(x=200, y=140)
+        x_val_change.insert("0", str(settings.get_X_VALUE()))
 
-        # Using label to show text
-        # X
-        x_val_label = tk.Label(new, text="New X value ", font=('', 15, 'bold'), foreground=self.mainColor)
-        x_val_label.place(x=250, y=270)
-        x_val_entry = tk.Entry(new, background=self.mainScreenColor, foreground=self.grayColor)
-        x_val_entry.pack(side=BOTTOM, ipadx=30, ipady=20)
-        x_val_entry.place(x=400, y=275)
+        label_y = ttk.CTkLabel(master=new,
+                               text="Y value:",
+                               text_color=template.grayColor,
+                               font=('', 18),
+                               fg_color=template.mainScreenColor)
+        label_y.place(x=100, y=200)
+        y_val_change = ttk.CTkEntry(master=new,
+                                    width=300,
+                                    height=40,
+                                    placeholder_text='Value for Y',
+                                    bg_color=template.mainScreenColor)
+        y_val_change.setvar(str(settings.get_Y_VALUE()))
+        y_val_change.place(x=200, y=190)
+        y_val_change.insert("0", str(settings.get_Y_VALUE()))
 
-        # Y
-        y_val_label = tk.Label(new, text="New Y value ", font=('', 15, 'bold'), foreground=self.mainColor)
-        y_val_label.place(x=250, y=320)
-        y_val_entry = tk.Entry(new, background=self.mainScreenColor, foreground=self.grayColor)
-        y_val_entry.pack(side=BOTTOM, ipadx=30, ipady=20)
-        y_val_entry.place(x=400, y=325)
+        label_z = ttk.CTkLabel(master=new,
+                               text="Z value:",
+                               text_color=template.grayColor,
+                               font=('', 18),
+                               fg_color=template.mainScreenColor)
+        label_z.place(x=100, y=250)
+        z_val_change = ttk.CTkEntry(master=new,
+                                    width=300,
+                                    height=40,
+                                    placeholder_text='Value for Z',
+                                    bg_color=template.mainScreenColor)
+        z_val_change.place(x=200, y=240)
+        z_val_change.insert("0", str(settings.get_Z_VALUE()))
 
-        # Z
-        z_val_label = tk.Label(new, text="New Z value ", font=('', 15, 'bold'), foreground=self.mainColor)
-        z_val_label.place(x=250, y=370)
-        z_val_entry = tk.Entry(new, background=self.mainScreenColor, foreground=self.grayColor)
-        z_val_entry.pack(side=BOTTOM, ipadx=30, ipady=20)
-        z_val_entry.place(x=400, y=375)
+        label_fee = ttk.CTkLabel(master=new,
+                                 text="Fee:",
+                                 text_color=template.grayColor,
+                                 font=('', 18),
+                                 fg_color=template.mainScreenColor)
+        label_fee.place(x=100, y=300)
+        fee_val_change = ttk.CTkEntry(master=new,
+                                      width=300,
+                                      height=40,
+                                      placeholder_text='Fee Setting',
+                                      bg_color=template.mainScreenColor)
+        fee_val_change.place(x=200, y=290)
+        fee_val_change.insert("0", str(settings.get_parking_fee()))
 
-        # Fees
-        parking_fee_label = tk.Label(new, text="New fee ", font=('', 15, 'bold'), foreground=self.mainColor)
-        parking_fee_label.place(x=250, y=420)
-        parking_fee_entry = tk.Entry(new, background=self.mainScreenColor, foreground=self.grayColor)
-        parking_fee_entry.pack(side=BOTTOM, ipadx=30, ipady=20)
-        parking_fee_entry.place(x=400, y=425)
+        label_name = ttk.CTkLabel(master=new,
+                                  text="Name:",
+                                  text_color=template.grayColor,
+                                  font=('', 18),
+                                  fg_color=template.mainScreenColor)
+        label_name.place(x=100, y=350)
+        fee_val_change = ttk.CTkEntry(master=new,
+                                      width=300,
+                                      height=40,
+                                      placeholder_text='Name',
+                                      bg_color=template.mainScreenColor)
+        fee_val_change.place(x=200, y=340)
+        fee_val_change.insert("0", str(settings.get_name()))
 
-        # Password
-        password_label = tk.Label(new, text="New password ", font=('', 15, 'bold'), foreground=self.mainColor)
-        password_label.place(x=250, y=470)
-        password_entry = tk.Entry(new, background=self.mainScreenColor, foreground=self.grayColor)
-        password_entry.pack(side=BOTTOM, ipadx=30, ipady=20)
-        password_entry.place(x=400, y=475)
-        # using button to upload settings
-        upload_button = tk.Button(new,
-                                  text="Upload",
-                                  background="white",
-                                  foreground=self.mainColor,
-                                  font=('', 13, "bold"),
-                                  height=1,
-                                  width=6,
-                                  cursor='hand2',
-                                  command=lambda: self.upload_settings(x_val_entry,
-                                                                       y_val_entry,
-                                                                       z_val_entry,
-                                                                       password_entry,
-                                                                       parking_fee_entry))
-        upload_button.place(x=30, y=440)
+        submitButton = ttk.CTkButton(master=new,
+                                     height=40,
+                                     text="Save Settings",
+                                     fg_color=template.mainColor,
+                                     font=("", 15, 'bold'),
+                                     text_color='white',
+                                     cursor="hand2",
+                                     hover_color='#ccccff', command=lambda: self.upload_settings(x_val_change.get(),
+                                                                                                 y_val_change.get(),
+                                                                                                 z_val_change.get(),
+                                                                                                 fee_val_change.get()))
 
-    def upload_settings(self, x_val_ent, y_val_ent, z_val_ent, password_ent, parking_fee_ent):
-        x_val = x_val_ent.get()
-        y_val = y_val_ent.get()
-        z_val = z_val_ent.get()
-        password = password_ent.get()
-        parking_fee = parking_fee_ent.get()
-        self.ms.edit_settings(x_val, y_val, z_val, password, parking_fee)
-        x_val_ent.delete(0, 'end')
-        y_val_ent.delete(0, 'end')
-        z_val_ent.delete(0, 'end')
-        password_ent.delete(0, 'end')
-        parking_fee_ent.delete(0, 'end')
+        submitButton.place(x=150, y=440)
+
+    def upload_settings(self, x_val, y_val, z_val, parking_fee_val):
+        password = None
+        self.ms.edit_settings(x_val, y_val, z_val, password, parking_fee_val)
         self.refresh()
 
     def refresh(self):
