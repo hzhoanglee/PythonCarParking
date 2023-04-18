@@ -529,7 +529,7 @@ class Builder:
 
         self.l1 = ttk.CTkLabel(master=self.sideBar, font=('', 15, 'bold'), text_color=self.grayColor)
         self.l1.place(x=50, y=400)
-        self.l1.place(x=50, y=450)
+        self.l1.place(x=50, y=500)
 
         # ===============================================
         # =====================END OF TIME===============
