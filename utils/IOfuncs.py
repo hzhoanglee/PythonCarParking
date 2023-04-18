@@ -18,6 +18,7 @@ class IOfuncs:
 
     #setting up the parking lot
     def setup_parking_lot(self):
+        self.clean_parking_lot()
         x_list = []
         for i in range(int(self.settings.get_X_VALUE())):
             chars = [chr(i + 65)]
@@ -44,6 +45,9 @@ class IOfuncs:
                 if slot.get_slot_code() == online_slot['slot_code']:
                     slot.check_in(Car(online_slot['car_driver_name'], online_slot['car_license_plate']))
 
+    #clean parking lot
+    def clean_parking_lot(self):
+        self.slot_list.clear()
 
     #parking a car(checking in)
     def checkin_car(self, driver_name, license_plate, slot_code = None):
