@@ -482,8 +482,10 @@ class Builder:
                                             ).place(x=0, y=350)
 
         # About
-
+        self.aboutImage = ttk.CTkImage(light_image=Image.open('images/about.png'),
+                                       size=(25, 25))
         self.aboutButton = ttk.CTkButton(master=self.sideBar,
+                                         image=self.aboutImage,
                                          text="About",
                                          width=200,
                                          height=50,
@@ -637,10 +639,45 @@ class Builder:
         x = template.root.winfo_x()
         y = template.root.winfo_y()
         new.geometry("+%d+%d" % (x + 300, y + 150))
-        new.geometry('800x600')
+        new.geometry('500x500')
+
+        # using label to show text
+        devs_label = ttk.CTkLabel(master=new, text_color=template.mainColor, fg_color=template.mainScreenColor,
+                                  text="Developers:", font=("", 24, 'bold'))
+        devs_label.pack(pady=10)
+
+        about_label_devs = ttk.CTkLabel(master=new, text_color=template.grayColor, fg_color=template.mainScreenColor,
+                                        font=("", 16),
+                                        text="Le Tuan Huy(bi12-195) "
+                                             "\n\nNguyen Minh Hoang(bi12-172)"
+                                             "\n\nLe Minh Hoang(bi12-167)"
+                                             "\n\nNguyen The Hoang(bi12-171)"
+                                             "\n\nNguyen Vu Viet Hoang(bi12-173)")
+        about_label_devs.pack()
+
+        divider = ttk.CTkLabel(master=new, text_color=template.grayColor, fg_color=template.mainScreenColor,
+                               text="----------------------------------------")
+        divider.pack()
+        # Contact
+        contact_label = ttk.CTkLabel(master=new, text_color=template.mainColor, fg_color=template.mainScreenColor,
+                                     text="Contacts:", font=("", 24, 'bold'))
+        contact_label.pack(pady=10)
+
+        about_label_contact = ttk.CTkLabel(master=new, text_color=template.grayColor, fg_color=template.mainScreenColor,
+                                           font=("", 16),
+                                           text="huylt.bi12-195@st.usth.edu.vn"
+                                                "\n\nhoangnm.bi12-172@st.usth.edu.vn"
+                                                "\n\nhoanglm.bi12-167@st.usth.edu.vn"
+                                                "\n\nhoangnt.bi12-171@st.usth.edu.vn"
+                                                "\n\nhoangnvv.bi12-173@st.usth.edu.vn")
+        about_label_contact.pack()
+
+        divider = ttk.CTkLabel(master=new, text_color=template.grayColor, fg_color=template.mainScreenColor,
+                               text="----------------------------------------")
+        divider.pack()
 
         new.wm_transient(template.root)
-
+        new.mainloop()
 
     def open_settings(self):
         # Creating the screen
