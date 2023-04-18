@@ -432,7 +432,7 @@ class Builder:
                                        cursor="hand2",
                                        anchor='center',
                                        hover_color='#ccccff',
-                                       command=lambda: self.open_check_in(),
+                                       command=lambda: self.gui.open_check_in(),
                                        ).place(x=0, y=250)
 
         # Manage vehicle
@@ -710,15 +710,19 @@ class Builder:
 
     def refresh(self):
         self.root.destroy()
-        self.__init__()
+        self.__init__(self.ms)
+        self.build()
+        self.my_time()
+        self.gui = ParkingBuildingGUI(self.ms)
+        self.gui.main_section()
         self.root.main_loop()
 
     def run(self):
         self.ms.setup_parking_lot()
         self.build()
         self.my_time()
-        gui = ParkingBuildingGUI(self.ms)
-        gui.main_section()
+        self.gui = ParkingBuildingGUI(self.ms)
+        self.gui.main_section()
         self.root.mainloop()
 
 
