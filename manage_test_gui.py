@@ -317,12 +317,12 @@ class Builder:
         self.login_window = ttk.CTk()
         self.login_window.geometry('500x300')
         self.login_window.resizable(True, True)
-        self.login_window.title("Vịt Quay Parking System")
+        self.login_window.title(self.ms.get_name())
         self.login_window.config(background='#f2ecff')
 
         # Creating the login form
         self.l1 = ttk.CTkLabel(master=self.login_window,
-                               text="Vịt Quay Parking System",
+                               text=self.ms.get_name(),
                                text_color=self.grayColor,
                                font=('', 30, 'bold'),
                                fg_color=self.mainScreenColor, ).place(x=80, y=50)
@@ -689,13 +689,13 @@ class Builder:
                                   font=('', 18),
                                   fg_color=template.mainScreenColor)
         label_name.place(x=100, y=350)
-        fee_val_change = ttk.CTkEntry(master=new,
-                                      width=300,
-                                      height=40,
-                                      placeholder_text='Name',
-                                      bg_color=template.mainScreenColor)
-        fee_val_change.place(x=200, y=340)
-        fee_val_change.insert("0", str(settings.get_name()))
+        label_val_change = ttk.CTkEntry(master=new,
+                                        width=300,
+                                        height=40,
+                                        placeholder_text='Name',
+                                        bg_color=template.mainScreenColor)
+        label_val_change.place(x=200, y=340)
+        label_val_change.insert("0", str(settings.get_name()))
 
         submitButton = ttk.CTkButton(master=new,
                                      height=40,
@@ -707,13 +707,15 @@ class Builder:
                                      hover_color='#ccccff', command=lambda: self.upload_settings(x_val_change.get(),
                                                                                                  y_val_change.get(),
                                                                                                  z_val_change.get(),
-                                                                                                 fee_val_change.get()))
+                                                                                                 fee_val_change.get(),
+                                                                                                 label_val_change.get()))
 
         submitButton.place(x=150, y=440)
 
-    def upload_settings(self, x_val, y_val, z_val, parking_fee_val):
+    def upload_settings(self, x_val, y_val, z_val, parking_fee_val, name):
         password = None
         self.ms.edit_settings(x_val, y_val, z_val, password, parking_fee_val)
+        self.ms.change_name(name)
         self.refresh()
 
     def refresh(self):
@@ -723,7 +725,7 @@ class Builder:
         self.my_time()
         self.gui = ParkingBuildingGUI(self.ms)
         self.gui.main_section()
-        #self.root.main_loop()
+        # self.root.main_loop()
 
     def run(self):
         self.ms.setup_parking_lot()
