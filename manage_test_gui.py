@@ -372,14 +372,14 @@ class Builder:
         self.header.place(x=201, y=0)
 
         # Log out button
-        self.logout_text = ttk.CTkButton(self.header,
-                                         text="Logout",
-                                         font=("", 13, "bold"),
-                                         fg_color='white',
-                                         cursor='hand2',
-                                         text_color=self.mainColor,
-                                         hover_color='#ccccff', command=lambda: self.kill_root())
-        self.logout_text.place(x=588, y=15)
+        # self.logout_text = ttk.CTkButton(self.header,
+        #                                  text="Logout",
+        #                                  font=("", 13, "bold"),
+        #                                  fg_color='white',
+        #                                  cursor='hand2',
+        #                                  text_color=self.mainColor,
+        #                                  hover_color='#ccccff', command=lambda: self.kill_root())
+        # self.logout_text.place(x=588, y=15)
 
         # ====================================
         # =============END OF HEADER==========
@@ -471,6 +471,22 @@ class Builder:
                                             hover_color='#ccccff',
                                             command=lambda: self.open_settings(),
                                             ).place(x=0, y=350)
+
+        # About
+
+        self.aboutButton = ttk.CTkButton(master=self.sideBar,
+                                         text="About",
+                                         width=200,
+                                         height=50,
+                                         compound='left',
+                                         fg_color='transparent',
+                                         text_color=self.mainColor,
+                                         font=('', 15, 'bold'),
+                                         cursor="hand2",
+                                         anchor='center',
+                                         hover_color='#ccccff',
+                                         command=lambda: self.open_about(),
+                                         ).place(x=0, y=400)
 
         # ===============================================
         # =====================END OF BUTTONS============
@@ -604,6 +620,19 @@ class Builder:
         new.wm_transient(self.root)
         new.mainloop()
 
+    def open_about(self):
+        new = ttk.CTkToplevel(template.root)
+        new.resizable(True, True)
+        new.title("About")
+        new.config(background=template.mainScreenColor)
+        x = template.root.winfo_x()
+        y = template.root.winfo_y()
+        new.geometry("+%d+%d" % (x + 300, y + 150))
+        new.geometry('800x600')
+
+        new.wm_transient(template.root)
+
+
     def open_settings(self):
         # Creating the screen
         new = ttk.CTkToplevel(template.root)
@@ -720,12 +749,12 @@ class Builder:
         self.refresh()
 
     def refresh(self):
-        #self.root.destroy()
-        #self.__init__(self.ms)
-        #self.build()
-        #self.my_time()
-        #self.gui = ParkingBuildingGUI(self.ms)
-        #self.gui.main_section()
+        # self.root.destroy()
+        # self.__init__(self.ms)
+        # self.build()
+        # self.my_time()
+        # self.gui = ParkingBuildingGUI(self.ms)
+        # self.gui.main_section()
         # self.root.main_loop()
         self.root.destroy()
         self.__init__(self.ms)
