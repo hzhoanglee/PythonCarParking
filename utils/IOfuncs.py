@@ -90,6 +90,10 @@ class IOfuncs:
     def change_password(self, new_pass):
         self.settings.set_password(new_pass)
         update_settings_password(new_pass)
+
+    def change_name(self, new_name):
+        self.settings.set_name(new_name)
+        update_settings_name(new_name)
     #==================================================================================================================
 
     #output

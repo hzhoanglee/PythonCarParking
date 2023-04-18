@@ -40,6 +40,9 @@ class ManagementSystem:
 
     def change_password(self, new_pass):
         self.io_car.change_password(new_pass)
+
+    def change_name(self, new_name):
+        self.io_car.change_name(new_name)
     #==================================================================================================================
     def get_slot_list(self):
         return self.io_car.get_slot_list()
@@ -48,6 +51,8 @@ class ManagementSystem:
         settings = self.io_car.get_settings()
         return settings
 
+    def get_name(self):
+        return self.io_car.settings.get_name()
 
     def get_unused_slots(self):
         for i in self.io_car.get_unused_slot():
