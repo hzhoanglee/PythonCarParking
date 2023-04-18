@@ -9,6 +9,7 @@ from tkinter import messagebox as mbox
 from utils.connect import mydb
 from login_verification import LoginVerification
 
+
 class ParkingFloor:
     def __init__(self, floor_code, floor_slots):
         self.floor_code = floor_code
@@ -106,7 +107,7 @@ class ParkingBuildingGUI:
     def open_check_in(self, slot_code="Auto"):
         # Creating the screen
         new = ttk.CTkToplevel(template.root)
-        new.resizable(False, False)
+        new.resizable(True, True)
         new.title("Car Check In Window")
         new.config(background=template.mainScreenColor)
         x = template.root.winfo_x()
@@ -193,7 +194,7 @@ class ParkingBuildingGUI:
     def open_check_out(self, slot_code):
         # Creating the screen
         new = ttk.CTkToplevel(template.root)
-        new.resizable(False, False)
+        new.resizable(True, True)
         new.title("Car Check Out Window")
         new.config(background=template.mainScreenColor)
         x = template.root.winfo_x()
@@ -315,7 +316,7 @@ class Builder:
         # Creating the screen
         self.login_window = ttk.CTk()
         self.login_window.geometry('500x300')
-        self.login_window.resizable(False, False)
+        self.login_window.resizable(True, True)
         self.login_window.title("Vịt Quay Parking System")
         self.login_window.config(background='#f2ecff')
 
@@ -455,23 +456,22 @@ class Builder:
 
         # Settings
         self.settingsImage = ttk.CTkImage(light_image=Image.open('images/settings.png'),
-                                     size=(25, 25))
+                                          size=(25, 25))
 
         self.settingsButton = ttk.CTkButton(master=self.sideBar,
-                                       image=self.settingsImage,
-                                       text="Settings",
-                                       width=200,
-                                       height=50,
-                                       compound='left',
-                                       fg_color='transparent',
-                                       text_color=self.mainColor,
-                                       font=('', 15, 'bold'),
-                                       cursor="hand2",
-                                       anchor='center',
-                                       hover_color='#ccccff',
-                                       command=lambda: self.open_settings(),
-                                       ).place(x=0, y=350)
-
+                                            image=self.settingsImage,
+                                            text="Settings",
+                                            width=200,
+                                            height=50,
+                                            compound='left',
+                                            fg_color='transparent',
+                                            text_color=self.mainColor,
+                                            font=('', 15, 'bold'),
+                                            cursor="hand2",
+                                            anchor='center',
+                                            hover_color='#ccccff',
+                                            command=lambda: self.open_settings(),
+                                            ).place(x=0, y=350)
 
         # ===============================================
         # =====================END OF BUTTONS============
@@ -505,7 +505,7 @@ class Builder:
     def open_manage(self):
         # Creating the screen
         new = ttk.CTkToplevel(self.root)
-        new.resizable(False, True)
+        new.resizable(True, True)
         new.title("Manage Car Window")
         new.config(background=self.mainScreenColor)
         new.geometry('600x520')
@@ -608,7 +608,7 @@ class Builder:
     def open_settings(self):
         # Creating the screen
         new = ttk.CTkToplevel(self.root)
-        new.resizable(False, False)
+        new.resizable(True, True)
         new.title("Settings")
         new.config(background=self.mainScreenColor)
         new.geometry('400x400')
@@ -626,15 +626,19 @@ class Builder:
                                  font=('', 15, 'bold'),
                                  foreground=self.mainColor)
         current_x_val.place(x=300, y=40)
-        current_y_val = tk.Label(new, text="Y value             " + str(settings.get_Y_VALUE()), font=('', 15, 'bold'), foreground=self.mainColor)
+        current_y_val = tk.Label(new, text="Y value             " + str(settings.get_Y_VALUE()), font=('', 15, 'bold'),
+                                 foreground=self.mainColor)
         current_y_val.place(x=300, y=80)
-        current_z_val = tk.Label(new, text="Z value             " + str(settings.get_Z_VALUE()), font=('', 15, 'bold'), foreground=self.mainColor)
+        current_z_val = tk.Label(new, text="Z value             " + str(settings.get_Z_VALUE()), font=('', 15, 'bold'),
+                                 foreground=self.mainColor)
         current_z_val.place(x=300, y=120)
-        current_parking_fee = tk.Label(new, text="Parking fee   " + str(settings.get_parking_fee()), font=('', 15, 'bold'), foreground=self.mainColor)
+        current_parking_fee = tk.Label(new, text="Parking fee   " + str(settings.get_parking_fee()),
+                                       font=('', 15, 'bold'), foreground=self.mainColor)
         current_parking_fee.place(x=300, y=160)
 
         # Edit settings
-        divider = tk.Label(new, text="-------------------------------------------------------------", font=('', 18, 'bold'), foreground=self.mainColor)
+        divider = tk.Label(new, text="-------------------------------------------------------------",
+                           font=('', 18, 'bold'), foreground=self.mainColor)
         divider.place(x=50, y=220)
         edit_settings_label = tk.Label(new, text="Edit Settings ", font=('', 15, 'bold'), foreground=self.grayColor)
         edit_settings_label.place(x=30, y=310)
