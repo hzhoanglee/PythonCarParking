@@ -722,7 +722,7 @@ class Builder:
         self.my_time()
         self.gui = ParkingBuildingGUI(self.ms)
         self.gui.main_section()
-        self.root.main_loop()
+        #self.root.main_loop()
 
     def run(self):
         self.ms.setup_parking_lot()
