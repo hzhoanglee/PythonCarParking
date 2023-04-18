@@ -354,8 +354,6 @@ class Builder:
                                     hover_color='#ccccff', command=lambda: self.check_login(passwordEntry.get()))
         loginButton.place(x=120, y=200)
 
-        # Keep the toplevel window in front of the root window
-        self.login_window.wm_transient(template.root)
         self.login_window.mainloop()
 
     def check_login(self, password):
