@@ -51,6 +51,31 @@ class ParkingBuildingGUI:
         for i in range(int(self.building_settings.get_Y_VALUE())):
             self.y_list.append(i)
 
+    def daily_report(self):
+        # daily fee
+        daily_history = self.ms.get_daily_report()
+        daily_fee_total = self.ms.calculate_total_income(daily_history)
+        # add text to (x=500, y=15)
+        daily_fee_lbl = ttk.CTkLabel(template.header,
+                                     text="Report Total Fee: " + str(daily_fee_total),
+                                     font=("", 13, "bold"),
+                                     fg_color=template.mainColor,
+                                     text_color='white')
+        daily_fee_lbl.place(x=20, y=10)
+
+        max_slot = self.ms.get_max_slot_count()
+        used_slot = self.ms.io_car.get_used_slot_count()
+        available_slot = self.ms.io_car.get_available_slot_count()
+
+        # add text to (x=500, y=15)
+        slot_lbl = ttk.CTkLabel(template.header,
+                                text="Max Slot: " + str(max_slot)
+                                     + " | Used Slot: " + str(used_slot)
+                                     + " | Available Slot: " + str(available_slot),
+                                font=("", 13, "bold"),
+                                fg_color=template.mainColor,
+                                text_color='white')
+        slot_lbl.place(x=20, y=30)
     def main_section(self):
         # Print main window in the right of sidebar
         main = ttk.CTkFrame(master=template.root, width=500,
@@ -62,7 +87,7 @@ class ParkingBuildingGUI:
         s.theme_use('default')
         s.configure('TNotebook.Tab', font=("clam", 12, "bold"), width=15, height=100, background="#E0E0E0")
         s.map("TNotebook", background=[("selected", "pink")])
-
+        self.daily_report()
         tab_control = ttkz.Notebook(main)
         for floor in self.building_floors:
             tab = ttkz.Frame(tab_control)
@@ -297,7 +322,7 @@ class Builder:
         self.grayColor = '#737373'
         self.hoverColor = '#ccccff'
         self.login = LoginVerification()
-        self.build_root()
+        #self.build_root()
 
     def build_root(self):
         # Setting the main window
@@ -359,6 +384,7 @@ class Builder:
     def check_login(self, password):
         if self.login.verify_password(password):
             self.login_window.destroy()
+            self.build_root()
             self.run()
         else:
             mbox.showerror("Error", "Wrong password")
@@ -380,15 +406,6 @@ class Builder:
         #                                  text_color=self.mainColor,
         #                                  hover_color='#ccccff', command=lambda: self.kill_root())
         # self.logout_text.place(x=588, y=15)
-
-        #daily fee
-        daily_history = self.ms.get_daily_report()
-        daily_fee_total = self.ms.calculate_total_income(daily_history)
-        #add text to (x=500, y=15)
-        daily_fee_lbl = ttk.CTkLabel(self.header, text="Report Total Fee: " + str(daily_fee_total), font=("", 13, "bold"), fg_color='white', cursor='hand2', text_color=self.mainColor)
-        daily_fee_lbl.place(x=500, y=15)
-
-
 
         # ====================================
         # =============END OF HEADER==========

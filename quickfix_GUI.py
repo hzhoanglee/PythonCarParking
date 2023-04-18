@@ -51,6 +51,32 @@ class ParkingBuildingGUI:
         for i in range(int(self.building_settings.get_Y_VALUE())):
             self.y_list.append(i)
 
+    def daily_report(self):
+        # daily fee
+        daily_history = self.ms.get_daily_report()
+        daily_fee_total = self.ms.calculate_total_income(daily_history)
+        # add text to (x=500, y=15)
+        daily_fee_lbl = ttk.CTkLabel(template.header,
+                                     text="Report Total Fee: " + str(daily_fee_total),
+                                     font=("", 13, "bold"),
+                                     fg_color=template.mainColor,
+                                     text_color='white')
+        daily_fee_lbl.place(x=20, y=10)
+
+        max_slot = self.ms.get_max_slot_count()
+        used_slot = self.ms.io_car.get_used_slot_count()
+        available_slot = self.ms.io_car.get_available_slot_count()
+
+        # add text to (x=500, y=15)
+        slot_lbl = ttk.CTkLabel(template.header,
+                                text="Max Slot: " + str(max_slot)
+                                     + " | Used Slot: " + str(used_slot)
+                                     + " | Available Slot: " + str(available_slot),
+                                font=("", 13, "bold"),
+                                fg_color=template.mainColor,
+                                text_color='white')
+        slot_lbl.place(x=20, y=30)
+
     def main_section(self):
         # Print main window in the right of sidebar
         main = ttk.CTkFrame(master=template.root, width=500,
@@ -63,6 +89,7 @@ class ParkingBuildingGUI:
         s.configure('TNotebook.Tab', font=("clam", 12, "bold"), width=15, height=100, background="#E0E0E0")
         s.map("TNotebook", background=[("selected", "pink")])
 
+        self.daily_report()
         tab_control = ttkz.Notebook(main)
         for floor in self.building_floors:
             tab = ttkz.Frame(tab_control)
@@ -107,7 +134,7 @@ class ParkingBuildingGUI:
     def open_check_in(self, slot_code="Auto"):
         # Creating the screen
         new = ttk.CTkToplevel(template.root)
-        new.resizable(False, False)
+        new.resizable(True, True)
         new.title("Car Check In Window")
         new.config(background=template.mainScreenColor)
         x = template.root.winfo_x()
@@ -194,7 +221,7 @@ class ParkingBuildingGUI:
     def open_check_out(self, slot_code):
         # Creating the screen
         new = ttk.CTkToplevel(template.root)
-        new.resizable(False, False)
+        new.resizable(True, True)
         new.title("Car Check Out Window")
         new.config(background=template.mainScreenColor)
         x = template.root.winfo_x()
@@ -297,14 +324,14 @@ class Builder:
         self.grayColor = '#737373'
         self.hoverColor = '#ccccff'
         self.login = LoginVerification()
-        self.build_root()
+        #self.build_root()
 
     def build_root(self):
         # Setting the main window
         self.root = ttk.CTk()
         self.root.geometry('970x700')
         self.root.resizable(True, True)
-        self.root.title("Vịt Quay Parking System")
+        self.root.title(self.ms.get_name())
         self.root.config(background='#f2ecff')
 
     def kill_root(self):
@@ -315,24 +342,24 @@ class Builder:
     def login_screen(self):
         # Creating the screen
         self.login_window = ttk.CTk()
-        self.login_window.geometry('970x700')
+        self.login_window.geometry('500x300')
         self.login_window.resizable(True, True)
-        self.login_window.title("Vịt Quay Parking System")
+        self.login_window.title(self.ms.get_name())
         self.login_window.config(background='#f2ecff')
 
         # Creating the login form
         self.l1 = ttk.CTkLabel(master=self.login_window,
-                               text="Vịt Quay Parking System",
+                               text=self.ms.get_name(),
                                text_color=self.grayColor,
                                font=('', 30, 'bold'),
-                               fg_color=self.mainScreenColor, ).place(x=250, y=90)
+                               fg_color=self.mainScreenColor, ).place(x=80, y=50)
 
         # Password label
         passwordLabel = ttk.CTkLabel(master=self.login_window,
                                      text="Password",
                                      text_color=self.grayColor,
                                      font=('', 15, 'bold'),
-                                     fg_color=self.mainScreenColor, ).place(x=250, y=280)
+                                     fg_color=self.mainScreenColor, ).place(x=120, y=130)
 
         # Password entry
         passwordEntry = ttk.CTkEntry(master=self.login_window,
@@ -341,7 +368,7 @@ class Builder:
                                      font=('', 15, 'bold'),
                                      border_color=self.mainColor,
                                      show="*")
-        passwordEntry.place(x=250, y=310)
+        passwordEntry.place(x=120, y=160)
 
         # Login button
         loginButton = ttk.CTkButton(master=self.login_window,
@@ -352,14 +379,14 @@ class Builder:
                                     text_color='white',
                                     cursor="hand2",
                                     hover_color='#ccccff', command=lambda: self.check_login(passwordEntry.get()))
-        loginButton.place(x=250, y=380)
+        loginButton.place(x=120, y=200)
 
-        # Keep the toplevel window in front of the root window
         self.login_window.mainloop()
 
     def check_login(self, password):
         if self.login.verify_password(password):
             self.login_window.destroy()
+            self.build_root()
             self.run()
         else:
             mbox.showerror("Error", "Wrong password")
@@ -373,14 +400,15 @@ class Builder:
         self.header.place(x=201, y=0)
 
         # Log out button
-        self.logout_text = ttk.CTkButton(self.header,
-                                         text="Logout",
-                                         font=("", 13, "bold"),
-                                         fg_color='white',
-                                         cursor='hand2',
-                                         text_color=self.mainColor,
-                                         hover_color='#ccccff', command=lambda: self.kill_root())
-        self.logout_text.place(x=588, y=15)
+        # self.logout_text = ttk.CTkButton(self.header,
+        #                                  text="Logout",
+        #                                  font=("", 13, "bold"),
+        #                                  fg_color='white',
+        #                                  cursor='hand2',
+        #                                  text_color=self.mainColor,
+        #                                  hover_color='#ccccff', command=lambda: self.kill_root())
+        # self.logout_text.place(x=588, y=15)
+
 
         # ====================================
         # =============END OF HEADER==========
@@ -410,6 +438,7 @@ class Builder:
                                  font=("", 15, "bold"),
                                  text_color="#737373")
         self.name.place(x=75, y=180)
+        self.name.place(x=75, y=190)
 
         # ===============================================
         # =====================BUTTONS===================
@@ -431,7 +460,7 @@ class Builder:
                                        cursor="hand2",
                                        anchor='center',
                                        hover_color='#ccccff',
-                                       command=lambda: self.open_check_in(),
+                                       command=lambda: self.gui.open_check_in(),
                                        ).place(x=0, y=250)
 
         # Manage vehicle
@@ -453,6 +482,41 @@ class Builder:
                                           command=lambda: self.open_manage()
                                           ).place(x=0, y=300)
 
+        # Settings
+        self.settingsImage = ttk.CTkImage(light_image=Image.open('images/settings.png'),
+                                          size=(25, 25))
+
+        self.settingsButton = ttk.CTkButton(master=self.sideBar,
+                                            image=self.settingsImage,
+                                            text="Settings",
+                                            width=200,
+                                            height=50,
+                                            compound='left',
+                                            fg_color='transparent',
+                                            text_color=self.mainColor,
+                                            font=('', 15, 'bold'),
+                                            cursor="hand2",
+                                            anchor='center',
+                                            hover_color='#ccccff',
+                                            command=lambda: self.open_settings(),
+                                            ).place(x=0, y=350)
+
+        # About
+
+        self.aboutButton = ttk.CTkButton(master=self.sideBar,
+                                         text="About",
+                                         width=200,
+                                         height=50,
+                                         compound='left',
+                                         fg_color='transparent',
+                                         text_color=self.mainColor,
+                                         font=('', 15, 'bold'),
+                                         cursor="hand2",
+                                         anchor='center',
+                                         hover_color='#ccccff',
+                                         command=lambda: self.open_about(),
+                                         ).place(x=0, y=400)
+
         # ===============================================
         # =====================END OF BUTTONS============
         # ===============================================
@@ -463,6 +527,7 @@ class Builder:
 
         self.l1 = ttk.CTkLabel(master=self.sideBar, font=('', 15, 'bold'), text_color=self.grayColor)
         self.l1.place(x=50, y=400)
+        self.l1.place(x=50, y=450)
 
         # ===============================================
         # =====================END OF TIME===============
@@ -484,7 +549,7 @@ class Builder:
     def open_manage(self):
         # Creating the screen
         new = ttk.CTkToplevel(self.root)
-        new.resizable(False, True)
+        new.resizable(True, True)
         new.title("Manage Car Window")
         new.config(background=self.mainScreenColor)
         new.geometry('600x520')
@@ -584,12 +649,152 @@ class Builder:
         new.wm_transient(self.root)
         new.mainloop()
 
+    def open_about(self):
+        new = ttk.CTkToplevel(template.root)
+        new.resizable(True, True)
+        new.title("About")
+        new.config(background=template.mainScreenColor)
+        x = template.root.winfo_x()
+        y = template.root.winfo_y()
+        new.geometry("+%d+%d" % (x + 300, y + 150))
+        new.geometry('800x600')
+
+        new.wm_transient(template.root)
+
+
+    def open_settings(self):
+        # Creating the screen
+        new = ttk.CTkToplevel(template.root)
+        new.resizable(True, True)
+        new.title("Settings")
+        new.config(background=template.mainScreenColor)
+        x = template.root.winfo_x()
+        y = template.root.winfo_y()
+        new.geometry("+%d+%d" % (x + 300, y + 150))
+        new.geometry('800x600')
+
+        # Get settings
+        settings = self.ms.get_settings()
+
+        # Using label to show text
+        label = ttk.CTkLabel(master=new,
+                             text="System Settings",
+                             text_color=template.grayColor,
+                             font=('', 20, 'bold'),
+                             fg_color=template.mainScreenColor).place(x=100, y=40)
+
+        label_x = ttk.CTkLabel(master=new,
+                               text="X value:",
+                               text_color=template.grayColor,
+                               font=('', 18),
+                               fg_color=template.mainScreenColor)
+        label_x.place(x=100, y=150)
+        x_val_change = ttk.CTkEntry(master=new,
+                                    width=300,
+                                    height=40,
+                                    placeholder_text='Value for X',
+                                    bg_color=template.mainScreenColor)
+        x_val_change.place(x=200, y=140)
+        x_val_change.insert("0", str(settings.get_X_VALUE()))
+
+        label_y = ttk.CTkLabel(master=new,
+                               text="Y value:",
+                               text_color=template.grayColor,
+                               font=('', 18),
+                               fg_color=template.mainScreenColor)
+        label_y.place(x=100, y=200)
+        y_val_change = ttk.CTkEntry(master=new,
+                                    width=300,
+                                    height=40,
+                                    placeholder_text='Value for Y',
+                                    bg_color=template.mainScreenColor)
+        y_val_change.setvar(str(settings.get_Y_VALUE()))
+        y_val_change.place(x=200, y=190)
+        y_val_change.insert("0", str(settings.get_Y_VALUE()))
+
+        label_z = ttk.CTkLabel(master=new,
+                               text="Z value:",
+                               text_color=template.grayColor,
+                               font=('', 18),
+                               fg_color=template.mainScreenColor)
+        label_z.place(x=100, y=250)
+        z_val_change = ttk.CTkEntry(master=new,
+                                    width=300,
+                                    height=40,
+                                    placeholder_text='Value for Z',
+                                    bg_color=template.mainScreenColor)
+        z_val_change.place(x=200, y=240)
+        z_val_change.insert("0", str(settings.get_Z_VALUE()))
+
+        label_fee = ttk.CTkLabel(master=new,
+                                 text="Fee:",
+                                 text_color=template.grayColor,
+                                 font=('', 18),
+                                 fg_color=template.mainScreenColor)
+        label_fee.place(x=100, y=300)
+        fee_val_change = ttk.CTkEntry(master=new,
+                                      width=300,
+                                      height=40,
+                                      placeholder_text='Fee Setting',
+                                      bg_color=template.mainScreenColor)
+        fee_val_change.place(x=200, y=290)
+        fee_val_change.insert("0", str(settings.get_parking_fee()))
+
+        label_name = ttk.CTkLabel(master=new,
+                                  text="Name:",
+                                  text_color=template.grayColor,
+                                  font=('', 18),
+                                  fg_color=template.mainScreenColor)
+        label_name.place(x=100, y=350)
+        label_val_change = ttk.CTkEntry(master=new,
+                                        width=300,
+                                        height=40,
+                                        placeholder_text='Name',
+                                        bg_color=template.mainScreenColor)
+        label_val_change.place(x=200, y=340)
+        label_val_change.insert("0", str(settings.get_name()))
+
+        submitButton = ttk.CTkButton(master=new,
+                                     height=40,
+                                     text="Save Settings",
+                                     fg_color=template.mainColor,
+                                     font=("", 15, 'bold'),
+                                     text_color='white',
+                                     cursor="hand2",
+                                     hover_color='#ccccff', command=lambda: self.upload_settings(x_val_change.get(),
+                                                                                                 y_val_change.get(),
+                                                                                                 z_val_change.get(),
+                                                                                                 fee_val_change.get(),
+                                                                                                 label_val_change.get()))
+
+        submitButton.place(x=150, y=440)
+        new.wm_transient(template.root)
+        new.mainloop()
+
+    def upload_settings(self, x_val, y_val, z_val, parking_fee_val, name):
+        password = None
+        self.ms.edit_settings(x_val, y_val, z_val, password, parking_fee_val)
+        self.ms.change_name(name)
+        self.refresh()
+
+    def refresh(self):
+        # self.root.destroy()
+        # self.__init__(self.ms)
+        # self.build()
+        # self.my_time()
+        # self.gui = ParkingBuildingGUI(self.ms)
+        # self.gui.main_section()
+        # self.root.main_loop()
+        self.root.destroy()
+        self.__init__(self.ms)
+        self.run()
+
     def run(self):
         self.ms.setup_parking_lot()
         self.build()
         self.my_time()
-        gui = ParkingBuildingGUI(self.ms)
-        gui.main_section()
+        self.gui = ParkingBuildingGUI(self.ms)
+        self.gui.main_section()
         self.root.mainloop()
 
 
