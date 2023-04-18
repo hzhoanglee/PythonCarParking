@@ -355,6 +355,7 @@ class Builder:
         loginButton.place(x=120, y=200)
 
         # Keep the toplevel window in front of the root window
+        self.login_window.wm_transient(template.root)
         self.login_window.mainloop()
 
     def check_login(self, password):
@@ -711,6 +712,8 @@ class Builder:
                                                                                                  label_val_change.get()))
 
         submitButton.place(x=150, y=440)
+        new.wm_transient(template.root)
+        new.mainloop()
 
     def upload_settings(self, x_val, y_val, z_val, parking_fee_val, name):
         password = None
