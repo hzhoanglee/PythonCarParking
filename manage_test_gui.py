@@ -381,6 +381,15 @@ class Builder:
         #                                  hover_color='#ccccff', command=lambda: self.kill_root())
         # self.logout_text.place(x=588, y=15)
 
+        #daily fee
+        daily_history = self.ms.get_daily_report()
+        daily_fee_total = self.ms.calculate_total_income(daily_history)
+        #add text to (x=500, y=15)
+        daily_fee_lbl = ttk.CTkLabel(self.header, text="Report Total Fee: " + str(daily_fee_total), font=("", 13, "bold"), fg_color='white', cursor='hand2', text_color=self.mainColor)
+        daily_fee_lbl.place(x=500, y=15)
+
+
+
         # ====================================
         # =============END OF HEADER==========
         # ====================================
