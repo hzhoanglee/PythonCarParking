@@ -77,7 +77,7 @@ def update_settings_password(password):
 def update_settings_X_VALUE(X_VALUE):
     if str(X_VALUE) == "" or X_VALUE is None:
         return -1
-    elif int(X_VALUE) < 1:
+    elif str(X_VALUE).isdigit() is False:
         return -1
     utils.connect.dbconnection.execute("UPDATE settings SET conf_value = %s WHERE conf_key = 'X_VALUE'", (X_VALUE,))
     utils.connect.mydb.commit()
@@ -85,7 +85,7 @@ def update_settings_X_VALUE(X_VALUE):
 def update_settings_Y_VALUE(Y_VALUE):
     if str(Y_VALUE) == "" or Y_VALUE is None:
         return -1
-    elif int(Y_VALUE) < 1:
+    elif str(Y_VALUE).isdigit() is False:
         return -1
     utils.connect.dbconnection.execute("UPDATE settings SET conf_value = %s WHERE conf_key = 'Y_VALUE'", (Y_VALUE,))
     utils.connect.mydb.commit()
@@ -93,7 +93,7 @@ def update_settings_Y_VALUE(Y_VALUE):
 def update_settings_Z_VALUE(Z_VALUE):
     if str(Z_VALUE) == "" or Z_VALUE is None:
         return -1
-    elif int(Z_VALUE) < 1:
+    elif str(Z_VALUE).isdigit() is False:
         return -1
     utils.connect.dbconnection.execute("UPDATE settings SET conf_value = %s WHERE conf_key = 'Z_VALUE'", (Z_VALUE,))
     utils.connect.mydb.commit()
@@ -101,7 +101,7 @@ def update_settings_Z_VALUE(Z_VALUE):
 def update_settings_parking_fee(parking_fee):
     if str(parking_fee) == "" or parking_fee is None:
         return -1
-    elif int(parking_fee) < 1:
+    elif str(parking_fee).isdigit() is False:
         return -1
     utils.connect.dbconnection.execute("UPDATE settings SET conf_value = %s WHERE conf_key = 'parking_fee'", (parking_fee,))
     utils.connect.mydb.commit()

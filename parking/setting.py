@@ -29,21 +29,21 @@ class Settings:
     def set_X_VALUE(self, X_VALUE):
         if str(X_VALUE) == "" or X_VALUE is None:
             return -1
-        elif int(X_VALUE) < 1:
+        elif str(X_VALUE).isdigit() is False:
             return -1
         self.__X_VALUE = X_VALUE
 
     def set_Y_VALUE(self, Y_VALUE):
         if str(Y_VALUE) == "" or Y_VALUE is None:
             return -1
-        elif int(Y_VALUE) < 1:
+        elif str(Y_VALUE).isdigit() is False:
             return -1
         self.__Y_VALUE = Y_VALUE
 
     def set_Z_VALUE(self, Z_VALUE):
         if str(Z_VALUE) == "" or Z_VALUE is None:
             return -1
-        elif int(Z_VALUE) < 1:
+        elif str(Z_VALUE).isdigit() is False:
             return -1
         self.__Z_VALUE = Z_VALUE
 
@@ -60,6 +60,6 @@ class Settings:
     def set_parking_fee(self, parking_fee):
         if str(parking_fee) == "" or parking_fee is None:
             return -1
-        elif int(parking_fee) < 1:
+        elif str(parking_fee).isdigit() is False:
             return -1
         self.__parking_fee = parking_fee

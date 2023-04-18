@@ -80,20 +80,18 @@ class IOfuncs:
         self.settings.set_Z_VALUE(Z_VALUE)
         self.settings.set_password(password)
         self.settings.set_parking_fee(parking_fee)
-        update_settings_X_VALUE(X_VALUE)
-        update_settings_Y_VALUE(Y_VALUE)
-        update_settings_Z_VALUE(Z_VALUE)
-        update_settings_password(password)
-        update_settings_parking_fee(parking_fee)
+        update_settings_X_VALUE(self.settings.get_X_VALUE())
+        update_settings_Y_VALUE(self.settings.get_Y_VALUE())
+        update_settings_Z_VALUE(self.settings.get_Z_VALUE())
+        update_settings_password(self.settings.get_password())
+        update_settings_parking_fee(self.settings.get_parking_fee())
         return self.settings
     #==================================================================================================================
 
     #output
-    #get the list of slots
     def get_slot_list(self):
         return self.slot_list
 
-    #get the list of settings
     def get_settings(self):
         return self.settings
 

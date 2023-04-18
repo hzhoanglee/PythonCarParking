@@ -339,35 +339,118 @@ class Dashboard:
         history_listbox.bind("<<ListboxSelect>>", lambda event: self.show_history_detail(history_listbox, history_detail_listbox, history))
 
 
-
-
-        #tab5: about
+        #tab5: daily report tab
         tab5 = ttk.Frame(tab_control)
-        tab_control.add(tab5, text="About")
+        tab_control.add(tab5, text="Daily Report")
+        tab_control.pack(expand=1, fill="both")
+        #get daily report
+        daily_report = self.ms.get_daily_report()
+        #scrollbar x
+        scrollbar_x = tk.Scrollbar(tab5, orient=tk.HORIZONTAL)
+        scrollbar_x.pack(side=tk.BOTTOM, fill=tk.X)
+        #scrollbar y
+        scrollbar_y = tk.Scrollbar(tab5, orient=tk.VERTICAL)
+        scrollbar_y.pack(side=tk.RIGHT, fill=tk.Y)
+        #using listbox to show daily report
+        daily_report_listbox = tk.Listbox(tab5, xscrollcommand=scrollbar_x.set, yscrollcommand=scrollbar_y.set)
+        daily_report_listbox.pack()
+        #add daily report to listbox
+        for dr in daily_report:
+            daily_report_listbox.insert(tk.END, dr)
+        #config scrollbar
+        scrollbar_x.config(command=daily_report_listbox.xview)
+        scrollbar_y.config(command=daily_report_listbox.yview)
+        #config listbox size
+        daily_report_listbox.config(width=100, height=20)
+        #add second listbox to show detail of daily report using select highlight
+        daily_report_detail_listbox = tk.Listbox(tab5, xscrollcommand=scrollbar_x.set, yscrollcommand=scrollbar_y.set)
+        daily_report_detail_listbox.pack()
+        #config scrollbar
+        scrollbar_x.config(command=daily_report_detail_listbox.xview)
+        scrollbar_y.config(command=daily_report_detail_listbox.yview)
+        #config listbox size
+        daily_report_detail_listbox.config(width=100, height=10)
+        #using select highlight to show detail of daily report
+        daily_report_listbox.bind("<<ListboxSelect>>", lambda event: self.show_history_detail(daily_report_listbox, daily_report_detail_listbox, daily_report))
+        #add title daily income
+        daily_income_label = tk.Label(tab5, text="Daily Income: ")
+        daily_income_label.pack()
+        #add daily income
+        daily_income = self.ms.calculate_total_income(daily_report)
+        daily_income_label = tk.Label(tab5, text=daily_income)
+        daily_income_label.pack()
+
+
+        #tab6: monthly report tab
+        tab6 = ttk.Frame(tab_control)
+        tab_control.add(tab6, text="Monthly Report")
+        tab_control.pack(expand=1, fill="both")
+        #get monthly report
+        monthly_report = self.ms.get_monthly_report()
+        #scrollbar x
+        scrollbar_x = tk.Scrollbar(tab6, orient=tk.HORIZONTAL)
+        scrollbar_x.pack(side=tk.BOTTOM, fill=tk.X)
+        #scrollbar y
+        scrollbar_y = tk.Scrollbar(tab6, orient=tk.VERTICAL)
+        scrollbar_y.pack(side=tk.RIGHT, fill=tk.Y)
+        #using listbox to show monthly report
+        monthly_report_listbox = tk.Listbox(tab6, xscrollcommand=scrollbar_x.set, yscrollcommand=scrollbar_y.set)
+        monthly_report_listbox.pack()
+        #add monthly report to listbox
+        for mr in monthly_report:
+            monthly_report_listbox.insert(tk.END, mr)
+        #config scrollbar
+        scrollbar_x.config(command=monthly_report_listbox.xview)
+        scrollbar_y.config(command=monthly_report_listbox.yview)
+        #config listbox size
+        monthly_report_listbox.config(width=100, height=20)
+        #add second listbox to show detail of monthly report using select highlight
+        monthly_report_detail_listbox = tk.Listbox(tab6, xscrollcommand=scrollbar_x.set, yscrollcommand=scrollbar_y.set)
+        monthly_report_detail_listbox.pack()
+        #config scrollbar
+        scrollbar_x.config(command=monthly_report_detail_listbox.xview)
+        scrollbar_y.config(command=monthly_report_detail_listbox.yview)
+        #config listbox size
+        monthly_report_detail_listbox.config(width=100, height=10)
+        #using select highlight to show detail of monthly report
+        monthly_report_listbox.bind("<<ListboxSelect>>", lambda event: self.show_history_detail(monthly_report_listbox, monthly_report_detail_listbox, monthly_report))
+        #add title monthly income
+        monthly_income_label = tk.Label(tab6, text="Monthly Income: ")
+        monthly_income_label.pack()
+        #add monthly income
+        monthly_income = self.ms.calculate_total_income(monthly_report)
+        monthly_income_label = tk.Label(tab6, text=monthly_income)
+        monthly_income_label.pack()
+
+
+
+        #tab7: about
+        tab7 = ttk.Frame(tab_control)
+        tab_control.add(tab7, text="About")
         tab_control.pack(expand=1, fill="both")
 
         #using label to show text
-        about_label_devs = tk.Label(tab5, text="Developer: Le Tuan Huy(bi12-195) "
+        about_label_devs = tk.Label(tab7, text="Developer: Le Tuan Huy(bi12-195) "
                                           "\nNguyen Minh Hoang(bi12-172)" 
                                           "\nLe Minh Hoang(bi12-167)" 
                                           "\nNguyen The Hoang(bi12-171)"
                                           "\nNguyen Vu Viet Hoang(bi12-173)")
         about_label_devs.pack()
 
-        divider = tk.Label(tab5, text="----------------------------------------")
+        divider = tk.Label(tab7, text="----------------------------------------")
         divider.pack()
 
-        about_label_contact = tk.Label(tab5, text="Contact:huylt.bi12-195@st.usth.edu.vn"
+        about_label_contact = tk.Label(tab7, text="Contact:huylt.bi12-195@st.usth.edu.vn"
                                                   "\nhoangnm.bi12-172@st.usth.edu.vn"
                                                   "\nhoanglm.bi12-167@st.usth.edu.vn"
                                                   "\nhoangnt.bi12-171@st.usth.edu.vn"
                                                   "\nhoangnvv.bi12-173@st.usth.edu.vn")
         about_label_contact.pack()
 
-        divider = tk.Label(tab5, text="----------------------------------------")
+        divider = tk.Label(tab7, text="----------------------------------------")
         divider.pack()
 
-        about_label_description = tk.Label(tab5, text="This GUI is a emergency GUI for the parking building"
+        about_label_description = tk.Label(tab7, text="This GUI is a emergency GUI for the parking building"
                                                         "\nIntended to be used in case of the main GUI is not working"
                                                       "\nor the main GUI resources is not available")
         about_label_description.pack()
@@ -392,7 +475,6 @@ class Dashboard:
         history_detail_listbox.delete(0, 'end')
         history_detail = history_lst[history_listbox.curselection()[0]]
         print(history_detail)
-        #add dict(id, car_license_plate, car_driver_name, check_in_time, check_out_time, parking_fee, status, slot_code) to listbox
         history_detail_listbox.insert(tk.END, "ID: " + str(history_detail['id']))
         history_detail_listbox.insert(tk.END, "Car license plate: " + str(history_detail['car_license_plate']))
         history_detail_listbox.insert(tk.END, "Car driver name: " + str(history_detail['car_driver_name']))

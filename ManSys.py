@@ -1,5 +1,5 @@
 from utils.IOfuncs import IOfuncs
-import bcrypt
+import datetime
 class ManagementSystem:
     def __init__(self):
         #self.settings = fetch_settings()
@@ -75,6 +75,55 @@ class ManagementSystem:
                 return slot
     def get_history(self):
         return self.io_car.get_history()
+
+    def get_daily_report(self):
+        daily_report = []
+        f = '%Y-%m-%d'
+        for i in self.io_car.get_history():
+            if i is None or i['checkout_time'] is None:
+                continue
+            else:
+                checkout_time = i['checkout_time'].strftime(f)
+                if checkout_time == datetime.datetime.now().strftime(f):
+                    daily_report.append(i)
+        print(daily_report)
+        return daily_report
+
+    def get_monthly_report(self):
+        monthly_report = []
+        f = '%Y-%m'
+        for i in self.io_car.get_history():
+            if i is None or i['checkout_time'] is None:
+                continue
+            else:
+                checkout_time = i['checkout_time'].strftime(f)
+                if checkout_time == datetime.datetime.now().strftime(f):
+                    monthly_report.append(i)
+        print(monthly_report)
+        return monthly_report
+
+    def get_yearly_report(self):
+        yearly_report = []
+        f = '%Y'
+        for i in self.io_car.get_history():
+            if i is None or i['checkout_time'] is None:
+                continue
+            else:
+                checkout_time = i['checkout_time'].strftime(f)
+                if checkout_time == datetime.datetime.now().strftime(f):
+                    yearly_report.append(i)
+        print(yearly_report)
+        return yearly_report
+
+    def calculate_total_income(self, report):
+        total_income = 0
+        for i in report:
+            if i is None or i['checkout_fee'] is None:
+                continue
+            else:
+                total_income += int(i['checkout_fee'])
+        print(total_income)
+        return total_income
 
     def get_history_details(self, index, history_lst):
         return self.io_car.get_history_details(index, history_lst)
