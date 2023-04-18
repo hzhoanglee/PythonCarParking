@@ -86,6 +86,10 @@ class IOfuncs:
         update_settings_password(self.settings.get_password())
         update_settings_parking_fee(self.settings.get_parking_fee())
         return self.settings
+
+    def change_password(self, new_pass):
+        self.settings.set_password(new_pass)
+        update_settings_password(new_pass)
     #==================================================================================================================
 
     #output

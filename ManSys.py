@@ -38,6 +38,8 @@ class ManagementSystem:
     def edit_settings(self, X_VALUE, Y_VALUE, Z_VALUE, password, parking_fee):
         return self.io_car.edit_settings(X_VALUE, Y_VALUE, Z_VALUE, password, parking_fee)
 
+    def change_password(self, new_pass):
+        self.io_car.change_password(new_pass)
     #==================================================================================================================
     def get_slot_list(self):
         return self.io_car.get_slot_list()
