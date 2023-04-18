@@ -812,16 +812,18 @@ class Builder:
         self.refresh()
 
     def refresh(self):
-        # self.root.destroy()
-        # self.__init__(self.ms)
-        # self.build()
-        # self.my_time()
-        # self.gui = ParkingBuildingGUI(self.ms)
-        # self.gui.main_section()
+        #self.root.destroy()
+        #self.__init__(self.ms)
+        #self.build()
+        #self.my_time()
+        #self.gui = ParkingBuildingGUI(self.ms)
+        #self.gui.main_section()
         # self.root.main_loop()
         self.root.destroy()
         self.__init__(self.ms)
+        self.build_root()
         self.run()
+
 
     def run(self):
         self.ms.setup_parking_lot()
