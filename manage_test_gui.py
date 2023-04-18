@@ -304,7 +304,7 @@ class Builder:
         self.root = ttk.CTk()
         self.root.geometry('970x700')
         self.root.resizable(True, True)
-        self.root.title("Vịt Quay Parking System")
+        self.root.title(self.ms.get_name())
         self.root.config(background='#f2ecff')
 
     def kill_root(self):
@@ -613,6 +613,7 @@ class Builder:
         new.config(background=template.mainScreenColor)
         x = template.root.winfo_x()
         y = template.root.winfo_y()
+        new.geometry("+%d+%d" % (x + 300, y + 150))
         new.geometry('800x600')
 
         # Get settings
