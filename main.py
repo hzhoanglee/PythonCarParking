@@ -400,16 +400,6 @@ class Builder:
                                    fg_color="#8685ef")
         self.header.place(x=201, y=0)
 
-        # Log out button
-        # self.logout_text = ttk.CTkButton(self.header,
-        #                                  text="Logout",
-        #                                  font=("", 13, "bold"),
-        #                                  fg_color='white',
-        #                                  cursor='hand2',
-        #                                  text_color=self.mainColor,
-        #                                  hover_color='#ccccff', command=lambda: self.kill_root())
-        # self.logout_text.place(x=588, y=15)
-
         # ====================================
         # =============END OF HEADER==========
         # ====================================
@@ -659,7 +649,7 @@ class Builder:
         x = template.root.winfo_x()
         y = template.root.winfo_y()
         new.geometry("+%d+%d" % (x + 300, y + 150))
-        new.geometry('500x500')
+        new.geometry('500x560')
 
         # using label to show text
         devs_label = ttk.CTkLabel(master=new, text_color=template.mainColor, fg_color=template.mainScreenColor,
@@ -815,13 +805,6 @@ class Builder:
         self.refresh()
 
     def refresh(self):
-        # self.root.destroy()
-        # self.__init__(self.ms)
-        # self.build()
-        # self.my_time()
-        # self.gui = ParkingBuildingGUI(self.ms)
-        # self.gui.main_section()
-        # self.root.main_loop()
         self.root.destroy()
         self.__init__(self.ms)
         self.build_root()
