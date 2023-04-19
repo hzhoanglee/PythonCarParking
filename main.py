@@ -189,14 +189,22 @@ class ParkingBuildingGUI:
                 # Check if dropdown menu has a value selected
                 if dropdown.get() != "Auto":
                     # Add car
-                    self.ms.checkin(driverName.get(), licensePlate.get(), dropdown.get())
+                    scode = self.ms.checkin(driverName.get(), licensePlate.get(), dropdown.get())
                     # Show success message
-                    mbox.showinfo("Success", "A car has been added.")
+                    mbox.showinfo("Success", f"A car has been added to {scode}.")
                     # Close the Toplevel window
                     self.main_section()
                     new.destroy()
                     # Reload the table
-
+                elif dropdown.get() == "Auto":
+                    # Add car
+                    scode = self.ms.checkin(driverName.get(), licensePlate.get(), dropdown.get())
+                    # Show success message
+                    mbox.showinfo("Success", f"A car has been added to {scode}.")
+                    # Close the Toplevel window
+                    self.main_section()
+                    new.destroy()
+                    # Reload the table
                 else:
                     # Show error message
                     mbox.showerror("Error", "Please select a parking slot.")

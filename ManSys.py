@@ -17,7 +17,7 @@ class ManagementSystem:
         if license_plate is None or license_plate == '':
             print("License plate is required")
             return -1
-        self.io_car.checkin_car(driver_name, license_plate, slot_code)
+        return self.io_car.checkin_car(driver_name, license_plate, slot_code)
 
     def checkout(self, slot_code):
         time_diff = self.io_car.checkout_car(slot_code)
